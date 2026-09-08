@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Minecraft Block Analyzer v0.7</title>
+<title>Minecraft Block Analyzer v0.9</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#202020">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -14,71 +14,76 @@
 :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1b1b1b;background:#f3f3f3}
 *{box-sizing:border-box}body{margin:0}.wrap{max-width:1180px;margin:auto;padding:12px}
 .card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:14px;margin-bottom:12px}
-h1{font-size:21px;margin:0 0 5px}h2{font-size:16px;margin:0 0 9px}.small{font-size:12px;color:#666}
+h1{font-size:21px;margin:0 0 5px}h2{font-size:16px;margin:0 0 9px}.small{font-size:12px;color:#666;line-height:1.5}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,input,textarea,select{font:inherit}button{padding:9px 11px;border:1px solid #bbb;background:#fff;border-radius:8px}
+button,input,textarea{font:inherit}button{padding:9px 11px;border:1px solid #bbb;background:#fff;border-radius:8px}
 button.primary{background:#222;color:#fff}button:disabled{opacity:.45}
 input[type=text],textarea{padding:8px;border:1px solid #bbb;border-radius:7px}
-textarea{width:100%;min-height:120px;resize:vertical}
+textarea{width:100%;min-height:110px;resize:vertical}
 .status{padding:7px 9px;background:#f2f2f2;border-radius:7px;font-size:12px}
-.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px}
-.item{border:1px solid #ddd;border-radius:10px;padding:9px;background:#fafafa}
-.item.ok{border-color:#a8c9a8}.item.warn{border-color:#d5ba72}.item.fail{border-color:#d99}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
+.item{border:1px solid #ddd;border-radius:10px;padding:9px;background:#fafafa;position:relative}
+.item.ok{border-color:#9ec69e}.item.warn{border-color:#d9bb66}.item.fail{border-color:#d88}
 .thumb{width:96px;height:96px;image-rendering:pixelated;border:1px solid #aaa;border-radius:6px;background:#222}
-.nameInput{width:100%;margin-top:6px}.idInput{width:100%;margin-top:5px}
-.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:11px;background:#eee}
-.badge.ok{background:#e7f4e7}.badge.warn{background:#fff3cf}.badge.fail{background:#fbe1e1}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,.7fr);gap:12px}
+.nameInput,.idInput{width:100%;margin-top:6px}.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:11px;background:#eee}
+.badge.ok{background:#e5f4e5}.badge.warn{background:#fff1c7}.badge.fail{background:#f9dddd}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.8fr);gap:12px}
 @media(max-width:800px){.grid2{grid-template-columns:1fr}}
 canvas{max-width:100%;border:1px solid #aaa;border-radius:8px;background:#222;touch-action:none}
-#editPreview{width:128px;height:128px;image-rendering:pixelated}
-#loupeWrap{position:fixed;right:12px;top:12px;z-index:50;display:none;background:#fff;border:2px solid #222;border-radius:14px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none}
-#loupe{width:180px;height:180px;border-radius:10px;border:1px solid #888;background:#111;image-rendering:pixelated}
+#editPreview{width:160px;height:160px;image-rendering:pixelated}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:none;align-items:center;justify-content:center;padding:12px}
-.modalBox{background:#fff;max-width:900px;width:100%;max-height:92vh;overflow:auto;border-radius:12px;padding:12px}
-pre{font-size:11px;background:#f5f5f5;padding:8px;border-radius:8px;overflow:auto}
+.modalBox{background:#fff;max-width:920px;width:100%;max-height:94vh;overflow:auto;border-radius:12px;padding:12px}
+#loupeWrap{position:fixed;right:12px;top:12px;z-index:150;display:none;background:#fff;border:2px solid #222;border-radius:14px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none}
+#loupe{width:180px;height:180px;border-radius:10px;border:1px solid #888;background:#111;image-rendering:pixelated}
+.cal{background:#eef5ff;border:1px solid #b8cde8;padding:9px;border-radius:9px;margin-top:8px}
+.suggest{position:absolute;left:9px;right:9px;z-index:20;background:white;border:1px solid #bbb;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.15);max-height:220px;overflow:auto;display:none}
+.suggest button{width:100%;border:0;border-bottom:1px solid #eee;border-radius:0;text-align:left;padding:9px;background:white}
+.suggest button:last-child{border-bottom:0}
+.dictStat{font-size:12px;color:#555}
 </style>
 </head>
 <body>
 <div class="wrap">
 <div class="card">
-<h1>Minecraft Block Analyzer v0.7</h1>
-<div class="small">複数スクリーンショット一括解析版。固定撮影条件＋16×16直接生成＋一括命名対応。</div>
+<h1>Minecraft Block Analyzer v0.9</h1>
+<div class="small">固定撮影スタジオ向け高精度版。4辺を多数点から直線回帰して交点を四隅にする方式へ変更。日本語名→正式ID辞書＋予測候補にも対応。</div>
 </div>
 
 <div class="card">
 <h2>1. スクリーンショットをまとめて選択</h2>
 <div class="row">
 <input id="files" type="file" accept="image/*" multiple>
-<button id="analyzeAll" class="primary" disabled>一括解析</button>
+<button id="analyzeAll" class="primary" disabled>高精度で一括解析</button>
 <button id="clearAll">全消去</button>
 <span id="batchStatus" class="status">画像を選択してください</span>
 </div>
-<div class="small" style="margin-top:7px">同じ撮影スタジオ・同じ画角の画像をまとめて選んでください。保存済み範囲を全画像へ適用します。</div>
+<div class="cal">
+<strong>固定スタジオ推奨手順</strong>
+<div class="small">最初の1枚を必要なら手動補正 → 「この範囲を全画像に適用」。その保存範囲を次回の高精度検出の探索中心にも使います。</div>
+</div>
 </div>
 
 <div class="card">
-<h2>2. 名前をまとめて付ける</h2>
+<h2>2. 名前・ID</h2>
 <div class="grid2">
 <div>
-<div class="row">
-<button id="useFilenames">ファイル名を名前にする</button>
-<button id="cleanNames">名前を整形</button>
-</div>
-<div class="small" style="margin-top:6px">拡張子を除いたファイル名を自動使用できます。「名前を整形」は _ や - を空白に変え、先頭末尾の余計な空白を除去します。</div>
+<div class="row"><button id="useFilenames">ファイル名を名前にする</button><button id="cleanNames">名前を整形</button></div>
+<div class="small" style="margin-top:6px">日本語名を入力すると辞書から候補を表示し、候補選択で正式IDを自動入力します。</div>
 </div>
 <div>
-<div class="small">Minecraft ID 共通namespace</div>
 <div class="row">
-<input id="namespace" type="text" value="minecraft" placeholder="minecraft">
-<button id="makeIds">名前からID生成</button>
+<span id="dictStat" class="dictStat"></span>
+<button id="importDict">辞書JSON追加</button>
+<input id="dictFile" type="file" accept=".json,application/json" hidden>
+<button id="exportDict">辞書JSON保存</button>
 </div>
+<div class="small">辞書形式: [{"name":"オークの板材","id":"minecraft:oak_planks","aliases":["オーク板材"]}]</div>
 </div>
 </div>
 <div style="margin-top:10px">
-<div class="small">一括名前入力（1行＝1画像、選択順に適用）</div>
+<div class="small">一括名前入力（1行＝1画像、選択順）。辞書に一致すればIDも同時入力。</div>
 <textarea id="bulkNames" placeholder="オークの板材&#10;丸石&#10;ダイヤモンドブロック"></textarea>
-<div class="row"><button id="applyBulkNames">この順番で名前を適用</button><button id="pullNames">現在の名前をここへ読み込む</button></div>
+<div class="row"><button id="applyBulkNames">名前＋IDを一括適用</button><button id="pullNames">現在の名前をここへ読み込む</button></div>
 </div>
 </div>
 
@@ -89,12 +94,7 @@ pre{font-size:11px;background:#f5f5f5;padding:8px;border-radius:8px;overflow:aut
 
 <div class="card">
 <h2>4. 出力</h2>
-<div class="row">
-<button id="exportJson" disabled>JSONを書き出す</button>
-<button id="exportCsv" disabled>CSVを書き出す</button>
-<button id="exportZip" class="primary" disabled>16×16画像＋データをZIP</button>
-</div>
-<div class="small" style="margin-top:6px">ZIPには textures/ 以下の16×16 PNG、block_colors.json、block_colors.csv をまとめます。</div>
+<div class="row"><button id="exportJson" disabled>JSON</button><button id="exportCsv" disabled>CSV</button><button id="exportZip" class="primary" disabled>16×16画像＋データをZIP</button></div>
 </div>
 </div>
 
@@ -104,68 +104,256 @@ pre{font-size:11px;background:#f5f5f5;padding:8px;border-radius:8px;overflow:aut
 <div class="grid2" style="margin-top:10px">
 <div><canvas id="editCanvas"></canvas></div>
 <div>
-<div class="small">四隅または辺中央をドラッグして補正</div>
+<div class="small">黄色＝四隅、青＝辺中央。ドラッグで補正できます。</div>
 <canvas id="editPreview" width="16" height="16"></canvas>
-<div class="row" style="margin-top:8px"><button id="saveEdit" class="primary">この補正を保存</button></div>
+<div class="row" style="margin-top:9px">
+<button id="autoThis">この画像を高精度再検出</button>
+<button id="saveEdit" class="primary">この補正を保存</button>
+</div>
+<div class="row" style="margin-top:8px"><button id="applyAll">この範囲を全画像に適用</button></div>
 </div>
 </div>
 </div>
 </div>
-
 <div id="loupeWrap"><canvas id="loupe" width="180" height="180"></canvas></div>
 
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script>
-const filesInput=document.getElementById('files'), results=document.getElementById('results'), batchStatus=document.getElementById('batchStatus');
-let items=[], currentEdit=-1, editImg=null, editPts=[], drag=null;
-const DEFAULT=[{x:.25,y:.2},{x:.75,y:.2},{x:.75,y:.8},{x:.25,y:.8}];
-function savedCal(){try{return JSON.parse(localStorage.getItem("mcba_cal_v07"))||DEFAULT}catch{return DEFAULT}}
+const $=id=>document.getElementById(id);
+const filesInput=$('files'),results=$('results'),batchStatus=$('batchStatus');
+let items=[],currentEdit=-1,editImg=null,editPts=[],drag=null;
+const DEFAULT=[{x:.355,y:.135},{x:.665,y:.135},{x:.665,y:.865},{x:.355,y:.865}];
+
+// Starter dictionary. Extendable/importable; future app can share the same JSON.
+let DICT=[
+{name:"オークの板材",id:"minecraft:oak_planks",aliases:["オーク板材","oak planks"]},
+{name:"丸石",id:"minecraft:cobblestone",aliases:["cobblestone"]},
+{name:"ダイヤモンドブロック",id:"minecraft:diamond_block",aliases:["ダイヤブロック","diamond block"]},
+{name:"黒色のコンクリート",id:"minecraft:black_concrete",aliases:["黒コンクリート","ブラックコンクリート"]},
+{name:"白色のコンクリート",id:"minecraft:white_concrete",aliases:["白コンクリート","ホワイトコンクリート"]},
+{name:"レンガ",id:"minecraft:bricks",aliases:["レンガブロック","bricks"]},
+{name:"ガラス",id:"minecraft:glass",aliases:["glass"]},
+{name:"色付きガラス",id:"minecraft:stained_glass",aliases:["ステンドグラス"]},
+{name:"オークの葉",id:"minecraft:oak_leaves",aliases:["オークの葉っぱ","oak leaves"]},
+{name:"石",id:"minecraft:stone",aliases:["stone"]},
+{name:"土",id:"minecraft:dirt",aliases:["dirt"]},
+{name:"草ブロック",id:"minecraft:grass_block",aliases:["grass block"]},
+{name:"砂",id:"minecraft:sand",aliases:["sand"]},
+{name:"砂利",id:"minecraft:gravel",aliases:["gravel"]},
+{name:"鉄ブロック",id:"minecraft:iron_block",aliases:["鉄のブロック","iron block"]},
+{name:"金ブロック",id:"minecraft:gold_block",aliases:["金のブロック","gold block"]},
+{name:"エメラルドブロック",id:"minecraft:emerald_block",aliases:["エメラルドのブロック"]},
+{name:"ネザライトブロック",id:"minecraft:netherite_block",aliases:["ネザライトのブロック"]},
+{name:"レッドストーンブロック",id:"minecraft:redstone_block",aliases:["レッドストーンのブロック"]},
+{name:"ラピスラズリブロック",id:"minecraft:lapis_block",aliases:["ラピスブロック"]},
+{name:"石レンガ",id:"minecraft:stone_bricks",aliases:["石のレンガ"]},
+{name:"苔むした丸石",id:"minecraft:mossy_cobblestone",aliases:["苔丸石"]},
+{name:"苔むした石レンガ",id:"minecraft:mossy_stone_bricks",aliases:["苔石レンガ"]},
+{name:"深層岩",id:"minecraft:deepslate",aliases:["deepslate"]},
+{name:"磨かれた深層岩",id:"minecraft:polished_deepslate",aliases:[]},
+{name:"深層岩レンガ",id:"minecraft:deepslate_bricks",aliases:[]},
+{name:"深層岩タイル",id:"minecraft:deepslate_tiles",aliases:[]},
+{name:"テラコッタ",id:"minecraft:terracotta",aliases:[]},
+{name:"白色のテラコッタ",id:"minecraft:white_terracotta",aliases:["白テラコッタ"]},
+{name:"黒色のテラコッタ",id:"minecraft:black_terracotta",aliases:["黒テラコッタ"]},
+{name:"クォーツブロック",id:"minecraft:quartz_block",aliases:["クオーツブロック","石英ブロック"]},
+{name:"滑らかなクォーツ",id:"minecraft:smooth_quartz",aliases:["滑らかな石英"]},
+{name:"方解石",id:"minecraft:calcite",aliases:["calcite"]},
+{name:"凝灰岩",id:"minecraft:tuff",aliases:["tuff"]},
+{name:"泥",id:"minecraft:mud",aliases:["mud"]},
+{name:"泥レンガ",id:"minecraft:mud_bricks",aliases:["mud bricks"]},
+{name:"竹ブロック",id:"minecraft:bamboo_block",aliases:[]},
+{name:"竹の板材",id:"minecraft:bamboo_planks",aliases:["竹板材"]},
+{name:"桜の板材",id:"minecraft:cherry_planks",aliases:["サクラの板材","桜板材"]},
+{name:"トウヒの板材",id:"minecraft:spruce_planks",aliases:["マツの板材","トウヒ板材"]},
+{name:"シラカバの板材",id:"minecraft:birch_planks",aliases:["シラカバ板材"]},
+{name:"ジャングルの板材",id:"minecraft:jungle_planks",aliases:["ジャングル板材"]},
+{name:"アカシアの板材",id:"minecraft:acacia_planks",aliases:["アカシア板材"]},
+{name:"ダークオークの板材",id:"minecraft:dark_oak_planks",aliases:["ダークオーク板材"]},
+{name:"マングローブの板材",id:"minecraft:mangrove_planks",aliases:["マングローブ板材"]},
+{name:"真紅の板材",id:"minecraft:crimson_planks",aliases:["クリムゾンの板材"]},
+{name:"歪んだ板材",id:"minecraft:warped_planks",aliases:["ワープドの板材"]}
+];
+try{const x=JSON.parse(localStorage.getItem('mcba_v09_dict')||'null');if(Array.isArray(x))DICT=x}catch{}
+function persistDict(){localStorage.setItem('mcba_v09_dict',JSON.stringify(DICT));updateDictStat()}
+function updateDictStat(){$('dictStat').textContent=`名称辞書 ${DICT.length}件`}
+updateDictStat();
+
+function normText(s){return String(s||'').normalize('NFKC').toLowerCase().replace(/\s+/g,'').replace(/[・･_\-]/g,'')}
+function dictMatches(q,limit=8){
+ q=normText(q);if(!q)return[];
+ let scored=[];
+ for(const e of DICT){
+   let fields=[e.name,e.id,...(e.aliases||[])];
+   let best=999;
+   for(const f of fields){let n=normText(f);if(n===q)best=Math.min(best,0);else if(n.startsWith(q))best=Math.min(best,1+(n.length-q.length)/100);else if(n.includes(q))best=Math.min(best,2+n.indexOf(q)/100);else if(q.includes(n))best=Math.min(best,3)}
+   if(best<999)scored.push([best,e]);
+ }
+ return scored.sort((a,b)=>a[0]-b[0]||a[1].name.localeCompare(b[1].name,'ja')).slice(0,limit).map(x=>x[1]);
+}
+function exactEntry(q){let n=normText(q);return DICT.find(e=>[e.name,e.id,...(e.aliases||[])].some(x=>normText(x)===n))||null}
+
 function safeBase(fn){return fn.replace(/\.[^.]+$/,'')}
 function cleanDisplay(s){return s.replace(/[_-]+/g,' ').replace(/\s+/g,' ').trim()}
-function slug(s){
- return s.normalize('NFKC').toLowerCase().replace(/[^a-z0-9_ -]/g,'').trim().replace(/[ -]+/g,'_').replace(/_+/g,'_') || 'block';
-}
-function setButtons(){let on=items.length>0;analyzeAll.disabled=!on;exportJson.disabled=!on;exportCsv.disabled=!on;exportZip.disabled=!on}
+function slug(s){return s.normalize('NFKC').toLowerCase().replace(/[^a-z0-9_ -]/g,'').trim().replace(/[ -]+/g,'_').replace(/_+/g,'_')||'block'}
+function clonePts(p){return p.map(q=>({x:q.x,y:q.y}))}
+function getCal(){try{let p=JSON.parse(localStorage.getItem('mcba_v09_cal'));return Array.isArray(p)&&p.length===4?p:null}catch{return null}}
+function setButtons(){let on=items.length>0;$('analyzeAll').disabled=!on;$('exportJson').disabled=!on;$('exportCsv').disabled=!on;$('exportZip').disabled=!on}
+
 filesInput.onchange=async e=>{
  items=[];
- const fs=[...e.target.files];
- for(const f of fs){
-   const url=URL.createObjectURL(f), im=new Image();
-   await new Promise((res,rej)=>{im.onload=res;im.onerror=rej;im.src=url});
-   items.push({file:f,url,img:im,name:cleanDisplay(safeBase(f.name)),minecraft_id:"",status:"未解析",statusClass:"warn",points:savedCal(),pngBlob:null,colors:null});
+ for(const f of [...e.target.files]){
+   const url=URL.createObjectURL(f),img=new Image();
+   await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=url});
+   let base=cleanDisplay(safeBase(f.name));
+   let ex=exactEntry(base);
+   items.push({file:f,url,img,name:ex?ex.name:base,minecraft_id:ex?ex.id:'',status:'未解析',statusClass:'warn',points:getCal()||clonePts(DEFAULT),confidence:null,pngBlob:null,colors:null});
  }
  batchStatus.textContent=`${items.length}枚を読み込みました`;
  render();setButtons();
 };
 
+function attachSuggest(input,idInput,box,it){
+ const show=()=>{
+   const ms=dictMatches(input.value);
+   box.innerHTML='';
+   if(!ms.length){box.style.display='none';return}
+   for(const e of ms){
+     const b=document.createElement('button');
+     b.innerHTML=`<strong>${e.name}</strong><br><span class="small">${e.id}</span>`;
+     b.onclick=()=>{input.value=e.name;idInput.value=e.id;it.name=e.name;it.minecraft_id=e.id;box.style.display='none'};
+     box.appendChild(b);
+   }
+   box.style.display='block';
+ };
+ input.oninput=()=>{it.name=input.value;let ex=exactEntry(input.value);if(ex){idInput.value=ex.id;it.minecraft_id=ex.id}show()};
+ input.onfocus=show;
+ input.onblur=()=>setTimeout(()=>box.style.display='none',180);
+}
 function render(){
- results.innerHTML="";
+ results.innerHTML='';
  items.forEach((it,i)=>{
-  const d=document.createElement('div');d.className=`item ${it.statusClass}`;
-  const canvas=document.createElement('canvas');canvas.width=16;canvas.height=16;canvas.className='thumb';
-  const c=canvas.getContext('2d');c.imageSmoothingEnabled=false;
-  if(it.pngBlob){const u=URL.createObjectURL(it.pngBlob);const im=new Image();im.onload=()=>{c.drawImage(im,0,0,16,16);URL.revokeObjectURL(u)};im.src=u}
-  else {c.fillStyle="#222";c.fillRect(0,0,16,16)}
-  const badge=document.createElement('span');badge.className=`badge ${it.statusClass}`;badge.textContent=it.status;
-  const n=document.createElement('input');n.className='nameInput';n.value=it.name;n.placeholder='表示名';n.oninput=()=>it.name=n.value;
-  const id=document.createElement('input');id.className='idInput';id.value=it.minecraft_id;id.placeholder='minecraft_id';id.oninput=()=>it.minecraft_id=id.value;
-  const btn=document.createElement('button');btn.textContent='手動補正';btn.onclick=()=>openEdit(i);
-  const fn=document.createElement('div');fn.className='small';fn.textContent=it.file.name;
-  d.append(canvas,badge,fn,n,id,btn);results.appendChild(d);
+   const d=document.createElement('div');d.className=`item ${it.statusClass}`;
+   const cv=document.createElement('canvas');cv.width=16;cv.height=16;cv.className='thumb';
+   const c=cv.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#222';c.fillRect(0,0,16,16);
+   if(it.pngBlob){const u=URL.createObjectURL(it.pngBlob),im=new Image();im.onload=()=>{c.drawImage(im,0,0,16,16);URL.revokeObjectURL(u)};im.src=u}
+   const badge=document.createElement('span');badge.className=`badge ${it.statusClass}`;badge.textContent=it.status+(it.confidence!=null?` ${Math.round(it.confidence*100)}%`:'');
+   const fn=document.createElement('div');fn.className='small';fn.textContent=it.file.name;
+   const n=document.createElement('input');n.className='nameInput';n.value=it.name;n.placeholder='日本語名 / ID / 別名';
+   const id=document.createElement('input');id.className='idInput';id.value=it.minecraft_id;id.placeholder='minecraft_id';id.oninput=()=>it.minecraft_id=id.value;
+   const box=document.createElement('div');box.className='suggest';
+   const b1=document.createElement('button');b1.textContent='手動補正';b1.onclick=()=>openEdit(i);
+   const b2=document.createElement('button');b2.textContent='高精度再検出';b2.onclick=async()=>{await analyzeItem(i,true);render()};
+   d.append(cv,badge,fn,n,id,box,b1,b2);results.appendChild(d);
+   attachSuggest(n,id,box,it);
  });
 }
-useFilenames.onclick=()=>{items.forEach(it=>it.name=safeBase(it.file.name));render()};
-cleanNames.onclick=()=>{items.forEach(it=>it.name=cleanDisplay(it.name));render()};
-pullNames.onclick=()=>bulkNames.value=items.map(it=>it.name).join('\n');
-applyBulkNames.onclick=()=>{
- const lines=bulkNames.value.split(/\r?\n/).map(s=>s.trim());
- items.forEach((it,i)=>{if(lines[i]!==undefined&&lines[i]!=="")it.name=lines[i]});render();
+
+$('useFilenames').onclick=()=>{items.forEach(it=>{let b=safeBase(it.file.name),ex=exactEntry(b);it.name=ex?ex.name:b;if(ex)it.minecraft_id=ex.id});render()};
+$('cleanNames').onclick=()=>{items.forEach(it=>it.name=cleanDisplay(it.name));render()};
+$('pullNames').onclick=()=>$('bulkNames').value=items.map(it=>it.name).join('\n');
+$('applyBulkNames').onclick=()=>{let a=$('bulkNames').value.split(/\r?\n/);items.forEach((it,i)=>{if(a[i]?.trim()){it.name=a[i].trim();let ex=exactEntry(it.name);if(ex){it.name=ex.name;it.minecraft_id=ex.id}}});render()};
+$('clearAll').onclick=()=>{items=[];results.innerHTML='';filesInput.value='';setButtons();batchStatus.textContent='画像を選択してください'};
+
+$('importDict').onclick=()=>$('dictFile').click();
+$('dictFile').onchange=async e=>{
+ const f=e.target.files[0];if(!f)return;
+ try{
+   const x=JSON.parse(await f.text());if(!Array.isArray(x))throw Error();
+   let map=new Map(DICT.map(e=>[e.id,e]));
+   for(const e of x){if(e&&e.name&&e.id)map.set(e.id,{name:e.name,id:e.id,aliases:Array.isArray(e.aliases)?e.aliases:[]})}
+   DICT=[...map.values()];persistDict();batchStatus.textContent=`辞書を追加しました（${DICT.length}件）`;
+ }catch{batchStatus.textContent='辞書JSONの形式を確認してください'}
+ e.target.value='';
 };
-makeIds.onclick=()=>{
- const ns=(namespace.value.trim()||'minecraft').replace(/[^a-z0-9_.-]/gi,'').toLowerCase();
- items.forEach(it=>it.minecraft_id=`${ns}:${slug(it.name)}`);render();
-};
-clearAll.onclick=()=>{items=[];results.innerHTML="";filesInput.value="";setButtons();batchStatus.textContent="画像を選択してください"};
+$('exportDict').onclick=()=>dl(new Blob([JSON.stringify(DICT,null,2)],{type:'application/json'}),'block_name_dictionary.json');
+
+// ---------- High precision line-fit detector ----------
+function grayData(img,maxW=900){
+ const scale=Math.min(1,maxW/img.width),w=Math.max(1,Math.round(img.width*scale)),h=Math.max(1,Math.round(img.height*scale));
+ const cv=document.createElement('canvas');cv.width=w;cv.height=h;const c=cv.getContext('2d',{willReadFrequently:true});c.drawImage(img,0,0,w,h);
+ const d=c.getImageData(0,0,w,h).data,g=new Float32Array(w*h);
+ for(let i=0,j=0;i<d.length;i+=4,j++)g[j]=.299*d[i]+.587*d[i+1]+.114*d[i+2];
+ let t=new Float32Array(g.length),b=new Float32Array(g.length);
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0,n=0;for(let k=-2;k<=2;k++){let xx=x+k;if(xx>=0&&xx<w){s+=g[y*w+xx];n++}}t[y*w+x]=s/n}
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){let s=0,n=0;for(let k=-2;k<=2;k++){let yy=y+k;if(yy>=0&&yy<h){s+=t[yy*w+x];n++}}b[y*w+x]=s/n}
+ const gx=new Float32Array(g.length),gy=new Float32Array(g.length);
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){let k=y*w+x;gx[k]=Math.abs(b[k+1]-b[k-1]);gy[k]=Math.abs(b[k+w]-b[k-w])}
+ return{w,h,g:b,gx,gy};
+}
+function median(a){let b=[...a].sort((x,y)=>x-y);return b[Math.floor(b.length/2)]||0}
+function robustLine(points,mode){ // mode x_of_y or y_of_x
+ if(points.length<8)return null;
+ let pts=[...points];
+ for(let iter=0;iter<3;iter++){
+   let sx=0,sy=0,sxx=0,sxy=0,n=pts.length;
+   for(const p of pts){let X=mode==='x_of_y'?p.y:p.x,Y=mode==='x_of_y'?p.x:p.y;sx+=X;sy+=Y;sxx+=X*X;sxy+=X*Y}
+   let den=n*sxx-sx*sx;if(Math.abs(den)<1e-9)return null;
+   let a=(n*sxy-sx*sy)/den,b=(sy-a*sx)/n;
+   let rs=pts.map(p=>{let X=mode==='x_of_y'?p.y:p.x,Y=mode==='x_of_y'?p.x:p.y;return Math.abs(Y-(a*X+b))});
+   let m=median(rs),thr=Math.max(1.5,m*2.8);
+   pts=pts.filter((p,i)=>rs[i]<=thr);
+   if(iter===2||pts.length<10){
+     let rmse=Math.sqrt(rs.reduce((s,r)=>s+r*r,0)/Math.max(1,rs.length));
+     return{a,b,rmse,n:pts.length};
+   }
+ }
+}
+function sampleEdgePoints(dat,side,prior){
+ const {w,h,gx,gy}=dat,p=prior||DEFAULT,pts=[];
+ if(side==='left'||side==='right'){
+   const pi=side==='left'?0:1;
+   let center=p[pi].x*w,band=.075*w,y0=.20*h,y1=.80*h;
+   for(let y=Math.round(y0);y<=Math.round(y1);y+=3){
+     let best={s:-1,x:center};
+     for(let x=Math.round(center-band);x<=Math.round(center+band);x++){
+       if(x<2||x>=w-2)continue;let s=gx[y*w+x];
+       if(s>best.s)best={s,x};
+     }
+     // Require locally meaningful edge
+     if(best.s>4)pts.push({x:best.x,y,score:best.s});
+   }
+ }else{
+   const pi=side==='top'?0:3;
+   let center=p[pi].y*h,band=.09*h,x0=.38*w,x1=.62*w;
+   // if prior width differs, use inner central section based on prior
+   x0=(p[0].x+(p[1].x-p[0].x)*.18)*w;x1=(p[0].x+(p[1].x-p[0].x)*.82)*w;
+   for(let x=Math.round(x0);x<=Math.round(x1);x+=3){
+     let best={s:-1,y:center};
+     for(let y=Math.round(center-band);y<=Math.round(center+band);y++){
+       if(y<2||y>=h-2)continue;let s=gy[y*w+x];
+       if(s>best.s)best={s,y};
+     }
+     if(best.s>4)pts.push({x,y:best.y,score:best.s});
+   }
+ }
+ return pts;
+}
+function intersect(l1,mode1,l2,mode2){
+ // l1 x=a*y+b and l2 y=c*x+d
+ let a=l1.a,b=l1.b,c=l2.a,d=l2.b;
+ let den=1-a*c;if(Math.abs(den)<1e-8)return null;
+ let x=(a*d+b)/den,y=c*x+d;return{x,y};
+}
+function autoDetect(img,prior=null){
+ const d=grayData(img),{w,h}=d,p=prior||getCal()||DEFAULT;
+ let lp=sampleEdgePoints(d,'left',p),rp=sampleEdgePoints(d,'right',p),tp=sampleEdgePoints(d,'top',p),bp=sampleEdgePoints(d,'bottom',p);
+ let L=robustLine(lp,'x_of_y'),R=robustLine(rp,'x_of_y'),T=robustLine(tp,'y_of_x'),B=robustLine(bp,'y_of_x');
+ if(!L||!R||!T||!B)return{points:clonePts(p),confidence:0};
+ let c0=intersect(L,'x_of_y',T,'y_of_x'),c1=intersect(R,'x_of_y',T,'y_of_x'),c2=intersect(R,'x_of_y',B,'y_of_x'),c3=intersect(L,'x_of_y',B,'y_of_x');
+ let raw=[c0,c1,c2,c3],pts=raw.map(q=>({x:q.x/w,y:q.y/h}));
+ let widths=[pts[1].x-pts[0].x,pts[2].x-pts[3].x],heights=[pts[3].y-pts[0].y,pts[2].y-pts[1].y];
+ let geom=(Math.min(...widths)>.18&&Math.max(...widths)<.50&&Math.min(...heights)>.48&&Math.max(...heights)<.88)?1:.2;
+ let support=Math.min(1,(L.n+R.n+T.n+B.n)/180);
+ let rm=(L.rmse+R.rmse+T.rmse+B.rmse)/4;
+ let fit=Math.max(0,Math.min(1,1-rm/5));
+ let drift=0;
+ for(let i=0;i<4;i++)drift+=Math.hypot(pts[i].x-p[i].x,pts[i].y-p[i].y);
+ drift/=4;
+ let driftScore=Math.max(0,1-drift/.10);
+ let confidence=Math.max(0,Math.min(1,geom*(.5*fit+.3*support+.2*driftScore)));
+ return{points:pts,confidence,debug:{rmse:rm,support}};
+}
 
 function solve(A,b){let n=b.length,M=A.map((r,i)=>r.concat(b[i]));for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++)if(Math.abs(M[j][i])>Math.abs(M[m][i]))m=j;[M[i],M[m]]=[M[m],M[i]];let d=M[i][i];if(Math.abs(d)<1e-12)return null;for(let k=i;k<=n;k++)M[i][k]/=d;for(let j=0;j<n;j++)if(j!==i){let f=M[j][i];for(let k=i;k<=n;k++)M[j][k]-=f*M[i][k]}}return M.map(r=>r[n])}
 function H(from,to){let A=[],b=[];for(let i=0;i<4;i++){let{x,y}=from[i],u=to[i].x,v=to[i].y;A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}let h=solve(A,b);return h?[...h,1]:null}
@@ -174,118 +362,52 @@ function mp(h,x,y){let z=h[6]*x+h[7]*y+h[8];return{x:(h[0]*x+h[1]*y+h[2])/z,y:(h
 function normToPx(norm,w,h){return norm.map(p=>({x:p.x*w,y:p.y*h}))}
 
 function make16(it){
- const src=document.createElement('canvas'), sc=src.getContext('2d');src.width=it.img.width;src.height=it.img.height;sc.drawImage(it.img,0,0);
- const sd=sc.getImageData(0,0,src.width,src.height).data;
- const out=document.createElement('canvas');out.width=16;out.height=16;const oc=out.getContext('2d'), od=oc.createImageData(16,16);
- const pts=normToPx(it.points,src.width,src.height);
- const hh=H(pts,[{x:0,y:0},{x:16,y:0},{x:16,y:16},{x:0,y:16}]);const hi=inv(hh);
- const samples=4;
- for(let y=0;y<16;y++)for(let x=0;x<16;x++){
-   let rr=0,gg=0,bb=0,n=0;
-   for(let sy=0;sy<samples;sy++)for(let sx=0;sx<samples;sx++){
-     let q=mp(hi,x+(sx+.5)/samples,y+(sy+.5)/samples);
-     let ix=Math.max(0,Math.min(src.width-1,Math.floor(q.x))),iy=Math.max(0,Math.min(src.height-1,Math.floor(q.y)));
-     let k=(iy*src.width+ix)*4;rr+=sd[k];gg+=sd[k+1];bb+=sd[k+2];n++;
-   }
-   let k=(y*16+x)*4;od.data[k]=Math.round(rr/n);od.data[k+1]=Math.round(gg/n);od.data[k+2]=Math.round(bb/n);od.data[k+3]=255;
- }
- oc.putImageData(od,0,0);
- return new Promise(r=>out.toBlob(b=>r({canvas:out,blob:b}),"image/png"));
+ const src=document.createElement('canvas'),sc=src.getContext('2d',{willReadFrequently:true});src.width=it.img.width;src.height=it.img.height;sc.drawImage(it.img,0,0);
+ const sd=sc.getImageData(0,0,src.width,src.height).data,out=document.createElement('canvas');out.width=16;out.height=16;
+ const oc=out.getContext('2d'),od=oc.createImageData(16,16),pts=normToPx(it.points,src.width,src.height);
+ const hh=H(pts,[{x:0,y:0},{x:16,y:0},{x:16,y:16},{x:0,y:16}]);if(!hh)throw Error('homography');const hi=inv(hh),samples=4;
+ for(let y=0;y<16;y++)for(let x=0;x<16;x++){let rr=0,gg=0,bb=0,n=0;for(let sy=0;sy<samples;sy++)for(let sx=0;sx<samples;sx++){let q=mp(hi,x+(sx+.5)/samples,y+(sy+.5)/samples),ix=Math.max(0,Math.min(src.width-1,Math.floor(q.x))),iy=Math.max(0,Math.min(src.height-1,Math.floor(q.y))),k=(iy*src.width+ix)*4;rr+=sd[k];gg+=sd[k+1];bb+=sd[k+2];n++}let k=(y*16+x)*4;od.data[k]=Math.round(rr/n);od.data[k+1]=Math.round(gg/n);od.data[k+2]=Math.round(bb/n);od.data[k+3]=255}
+ oc.putImageData(od,0,0);return new Promise(r=>out.toBlob(b=>r({canvas:out,blob:b}),'image/png'));
 }
-function hsv(r,g,b){r/=255;g/=255;b/=255;let mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return[h,mx?d/mx*100:0,mx*100]}
-function lab(r,g,b){let a=[r,g,b].map(v=>{v/=255;return v>.04045?Math.pow((v+.055)/1.055,2.4):v/12.92});let X=(a[0]*.4124+a[1]*.3576+a[2]*.1805)/.95047,Y=a[0]*.2126+a[1]*.7152+a[2]*.0722,Z=(a[0]*.0193+a[1]*.1192+a[2]*.9505)/1.08883;a=[X,Y,Z].map(v=>v>.008856?Math.cbrt(v):7.787*v+16/116);return[116*a[1]-16,500*(a[0]-a[1]),200*(a[1]-a[2])]}
+function hsv(r,g,b){r/=255;g/=255;b/=255;let mx=Math.max(r,g,b),mn=Math.min(r,g,b),dd=mx-mn,h=0;if(dd){if(mx===r)h=((g-b)/dd)%6;else if(mx===g)h=(b-r)/dd+2;else h=(r-g)/dd+4;h*=60;if(h<0)h+=360}return[h,mx?dd/mx*100:0,mx*100]}
+function lab(r,g,b){let a=[r,g,b].map(v=>{v/=255;return v>.04045?Math.pow((v+.055)/1.055,2.4):v/12.92}),X=(a[0]*.4124+a[1]*.3576+a[2]*.1805)/.95047,Y=a[0]*.2126+a[1]*.7152+a[2]*.0722,Z=(a[0]*.0193+a[1]*.1192+a[2]*.9505)/1.08883;a=[X,Y,Z].map(v=>v>.008856?Math.cbrt(v):7.787*v+16/116);return[116*a[1]-16,500*(a[0]-a[1]),200*(a[1]-a[2])]}
 function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2])}
-function extractColors(canvas){
- const d=canvas.getContext('2d').getImageData(0,0,16,16).data,cs=[];
- for(let i=0;i<d.length;i+=4){
-   let rgb=[d[i],d[i+1],d[i+2]],l=lab(...rgb),best=-1,bd=1e9;
-   cs.forEach((c,j)=>{let z=dist(l,c.lab);if(z<bd){bd=z;best=j}});
-   if(best>=0&&bd<10){let c=cs[best];c.n++;c.sum=c.sum.map((v,k)=>v+rgb[k]);c.rgb=c.sum.map(v=>v/c.n);c.lab=lab(...c.rgb)}
-   else cs.push({n:1,sum:[...rgb],rgb:[...rgb],lab:l});
- }
- cs.sort((a,b)=>b.n-a.n);
- return cs.slice(0,2).map(c=>{let rgb=c.rgb.map(Math.round),hv=hsv(...rgb),la=lab(...rgb);return{rgb,hsv:hv.map(v=>+v.toFixed(2)),lab:la.map(v=>+v.toFixed(2)),ratio:+(c.n/256).toFixed(4)}})
+function extractColors(canvas){let d=canvas.getContext('2d').getImageData(0,0,16,16).data,cs=[];for(let i=0;i<d.length;i+=4){let rgb=[d[i],d[i+1],d[i+2]],l=lab(...rgb),best=-1,bd=1e9;cs.forEach((c,j)=>{let z=dist(l,c.lab);if(z<bd){bd=z;best=j}});if(best>=0&&bd<10){let c=cs[best];c.n++;c.sum=c.sum.map((v,k)=>v+rgb[k]);c.rgb=c.sum.map(v=>v/c.n);c.lab=lab(...c.rgb)}else cs.push({n:1,sum:[...rgb],rgb:[...rgb],lab:l})}cs.sort((a,b)=>b.n-a.n);return cs.slice(0,2).map(c=>{let rgb=c.rgb.map(Math.round);return{rgb,hsv:hsv(...rgb).map(v=>+v.toFixed(2)),lab:lab(...rgb).map(v=>+v.toFixed(2)),ratio:+(c.n/256).toFixed(4)}})}
+
+async function analyzeItem(i,forceAuto=false){
+ let it=items[i],cal=getCal();
+ let a=autoDetect(it.img,cal||it.points);it.points=a.points;it.confidence=a.confidence;
+ try{let r=await make16(it);it.pngBlob=r.blob;it.colors=extractColors(r.canvas);if(it.confidence>=.72){it.status='成功';it.statusClass='ok'}else{it.status='要確認';it.statusClass='warn'}}catch{it.status='失敗';it.statusClass='fail'}
 }
-analyzeAll.onclick=async()=>{
- analyzeAll.disabled=true;batchStatus.textContent=`0 / ${items.length} 解析中`;
- for(let i=0;i<items.length;i++){
-   try{
-     const r=await make16(items[i]);items[i].pngBlob=r.blob;items[i].colors=extractColors(r.canvas);
-     items[i].status='成功';items[i].statusClass='ok';
-   }catch(e){items[i].status='失敗';items[i].statusClass='fail'}
-   batchStatus.textContent=`${i+1} / ${items.length} 解析中`;
- }
- batchStatus.textContent=`${items.length}枚の解析完了`;analyzeAll.disabled=false;render();
+$('analyzeAll').onclick=async()=>{
+ $('analyzeAll').disabled=true;
+ for(let i=0;i<items.length;i++){batchStatus.textContent=`${i+1} / ${items.length} 高精度解析中`;await analyzeItem(i,true)}
+ batchStatus.textContent=`${items.length}枚の処理完了`;render();$('analyzeAll').disabled=false;
 };
 
-function records(){
- return items.map(it=>({
-   schema_version:"0.7", name:it.name||null, minecraft_id:it.minecraft_id||null,
-   source_filename:it.file.name, image_source:"standardized_game_screenshot",
-   analysis_size:"16x16", crop_points_normalized:it.points,
-   primary_color:it.colors?.[0]||null, secondary_color:it.colors?.[1]||null,
-   status:it.status
- }));
-}
-function csvText(){
- const rows=[["name","minecraft_id","source_filename","status","primary_rgb","primary_hsv","primary_lab","primary_ratio","secondary_rgb","secondary_hsv","secondary_lab","secondary_ratio"]];
- for(const it of items){
-   let a=it.colors?.[0],b=it.colors?.[1];
-   rows.push([it.name,it.minecraft_id,it.file.name,it.status,a?.rgb?.join(" "),a?.hsv?.join(" "),a?.lab?.join(" "),a?.ratio,b?.rgb?.join(" "),b?.hsv?.join(" "),b?.lab?.join(" "),b?.ratio]);
- }
- return rows.map(r=>r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
-}
-function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
-exportJson.onclick=()=>dl(new Blob([JSON.stringify(records(),null,2)],{type:"application/json"}),"block_colors.json");
-exportCsv.onclick=()=>dl(new Blob([csvText()],{type:"text/csv;charset=utf-8"}),"block_colors.csv");
-exportZip.onclick=async()=>{
- if(typeof JSZip==="undefined"){batchStatus.textContent="ZIPライブラリを読み込めませんでした。オンラインで一度起動してください";return}
- const zip=new JSZip(),folder=zip.folder("textures");
- items.forEach((it,i)=>{if(it.pngBlob){let n=slug(it.minecraft_id?.split(":").pop()||it.name||`block_${i+1}`);folder.file(`${n}.png`,it.pngBlob)}});
- zip.file("block_colors.json",JSON.stringify(records(),null,2));
- zip.file("block_colors.csv",csvText());
- const blob=await zip.generateAsync({type:"blob"});dl(blob,"minecraft_block_batch.zip");
-};
+function records(){return items.map(it=>({schema_version:'0.9',name:it.name||null,minecraft_id:it.minecraft_id||null,source_filename:it.file.name,image_source:'standardized_game_screenshot',analysis_size:'16x16',crop_points_normalized:it.points,auto_confidence:it.confidence,primary_color:it.colors?.[0]||null,secondary_color:it.colors?.[1]||null,status:it.status}))}
+function csvText(){let rows=[['name','minecraft_id','source_filename','status','confidence','primary_rgb','primary_hsv','primary_lab','primary_ratio','secondary_rgb','secondary_hsv','secondary_lab','secondary_ratio']];for(const it of items){let a=it.colors?.[0],b=it.colors?.[1];rows.push([it.name,it.minecraft_id,it.file.name,it.status,it.confidence,a?.rgb?.join(' '),a?.hsv?.join(' '),a?.lab?.join(' '),a?.ratio,b?.rgb?.join(' '),b?.hsv?.join(' '),b?.lab?.join(' '),b?.ratio])}return rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n')}
+function dl(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),10000)}
+$('exportJson').onclick=()=>dl(new Blob([JSON.stringify(records(),null,2)],{type:'application/json'}),'block_colors.json');
+$('exportCsv').onclick=()=>dl(new Blob([csvText()],{type:'text/csv;charset=utf-8'}),'block_colors.csv');
+$('exportZip').onclick=async()=>{if(typeof JSZip==='undefined'){batchStatus.textContent='ZIP機能を読み込めません。オンラインで一度起動してください';return}let z=new JSZip(),f=z.folder('textures');items.forEach((it,i)=>{if(it.pngBlob)f.file(`${slug(it.minecraft_id?.split(':').pop()||it.name||`block_${i+1}`)}.png`,it.pngBlob)});z.file('block_colors.json',JSON.stringify(records(),null,2));z.file('block_colors.csv',csvText());z.file('block_name_dictionary.json',JSON.stringify(DICT,null,2));dl(await z.generateAsync({type:'blob'}),'minecraft_block_batch.zip')};
 
-const editModal=document.getElementById('editModal'),EC=document.getElementById('editCanvas'),E=EC.getContext('2d'),EP=document.getElementById('editPreview'),EPC=EP.getContext('2d');
-const loupeWrap=document.getElementById('loupeWrap'),LC=document.getElementById('loupe').getContext('2d');
-function openEdit(i){
- currentEdit=i;editImg=items[i].img;let scale=Math.min(850/editImg.width,650/editImg.height,1);EC.width=Math.round(editImg.width*scale);EC.height=Math.round(editImg.height*scale);
- editPts=normToPx(items[i].points,EC.width,EC.height);editTitle.textContent=`手動補正：${items[i].name}`;editModal.style.display='flex';drawEdit();previewEdit();
-}
-closeEdit.onclick=()=>editModal.style.display='none';
-function drawEdit(){
- E.clearRect(0,0,EC.width,EC.height);E.drawImage(editImg,0,0,EC.width,EC.height);
- E.strokeStyle="#00ff88";E.lineWidth=3;E.beginPath();editPts.forEach((p,i)=>i?E.lineTo(p.x,p.y):E.moveTo(p.x,p.y));E.closePath();E.stroke();
- editPts.forEach(p=>{E.fillStyle="#ffdd00";E.beginPath();E.arc(p.x,p.y,9,0,Math.PI*2);E.fill()});
- for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(editPts[i].x+editPts[j].x)/2,y:(editPts[i].y+editPts[j].y)/2};E.fillStyle="#00d9ff";E.beginPath();E.arc(m.x,m.y,7,0,Math.PI*2);E.fill()}
-}
+const editModal=$('editModal'),EC=$('editCanvas'),E=EC.getContext('2d'),EP=$('editPreview'),EPC=EP.getContext('2d'),loupeWrap=$('loupeWrap'),LC=$('loupe').getContext('2d');
+function openEdit(i){currentEdit=i;editImg=items[i].img;let s=Math.min(880/editImg.width,650/editImg.height,1);EC.width=Math.round(editImg.width*s);EC.height=Math.round(editImg.height*s);editPts=normToPx(items[i].points,EC.width,EC.height);$('editTitle').textContent=`手動補正：${items[i].name}`;editModal.style.display='flex';drawEdit();previewEdit()}
+$('closeEdit').onclick=()=>editModal.style.display='none';
+function drawEdit(){E.clearRect(0,0,EC.width,EC.height);E.drawImage(editImg,0,0,EC.width,EC.height);E.strokeStyle='#00e68a';E.lineWidth=3;E.beginPath();editPts.forEach((p,i)=>i?E.lineTo(p.x,p.y):E.moveTo(p.x,p.y));E.closePath();E.stroke();editPts.forEach(p=>{E.fillStyle='#ffd400';E.beginPath();E.arc(p.x,p.y,9,0,Math.PI*2);E.fill()});for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(editPts[i].x+editPts[j].x)/2,y:(editPts[i].y+editPts[j].y)/2};E.fillStyle='#00cfee';E.beginPath();E.arc(m.x,m.y,7,0,Math.PI*2);E.fill()}}
 function epos(e){let r=EC.getBoundingClientRect();return{x:(e.clientX-r.left)*EC.width/r.width,y:(e.clientY-r.top)*EC.height/r.height}}
-function ehit(p){
- let rad=30*EC.width/EC.getBoundingClientRect().width;
- for(let i=0;i<4;i++)if(Math.hypot(p.x-editPts[i].x,p.y-editPts[i].y)<rad)return{type:"point",i,last:p};
- for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(editPts[i].x+editPts[j].x)/2,y:(editPts[i].y+editPts[j].y)/2};if(Math.hypot(p.x-m.x,p.y-m.y)<rad)return{type:"edge",i,j,last:p}}
- return null;
-}
-function showLoupe(p){
- loupeWrap.style.display='block';LC.clearRect(0,0,180,180);let ss=36,sx=Math.max(0,Math.min(EC.width-ss,p.x-ss/2)),sy=Math.max(0,Math.min(EC.height-ss,p.y-ss/2));
- LC.imageSmoothingEnabled=false;LC.drawImage(EC,sx,sy,ss,ss,0,0,180,180);LC.strokeStyle="#ff2d55";LC.lineWidth=2;LC.beginPath();LC.moveTo(90,0);LC.lineTo(90,180);LC.moveTo(0,90);LC.lineTo(180,90);LC.stroke();
-}
+function ehit(p){let rad=30*EC.width/EC.getBoundingClientRect().width;for(let i=0;i<4;i++)if(Math.hypot(p.x-editPts[i].x,p.y-editPts[i].y)<rad)return{type:'point',i,last:p};for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(editPts[i].x+editPts[j].x)/2,y:(editPts[i].y+editPts[j].y)/2};if(Math.hypot(p.x-m.x,p.y-m.y)<rad)return{type:'edge',i,j,last:p}}return null}
+function showLoupe(p){loupeWrap.style.display='block';LC.clearRect(0,0,180,180);let ss=36,sx=Math.max(0,Math.min(EC.width-ss,p.x-ss/2)),sy=Math.max(0,Math.min(EC.height-ss,p.y-ss/2));LC.imageSmoothingEnabled=false;LC.drawImage(EC,sx,sy,ss,ss,0,0,180,180);LC.strokeStyle='#ff2d55';LC.lineWidth=2;LC.beginPath();LC.moveTo(90,0);LC.lineTo(90,180);LC.moveTo(0,90);LC.lineTo(180,90);LC.stroke()}
 EC.onpointerdown=e=>{let p=epos(e);drag=ehit(p);if(drag){EC.setPointerCapture(e.pointerId);showLoupe(p)}};
-EC.onpointermove=e=>{if(!drag)return;let p=epos(e),dx=p.x-drag.last.x,dy=p.y-drag.last.y;if(drag.type==="point"){editPts[drag.i].x+=dx;editPts[drag.i].y+=dy}else{editPts[drag.i].x+=dx;editPts[drag.i].y+=dy;editPts[drag.j].x+=dx;editPts[drag.j].y+=dy}drag.last=p;drawEdit();previewEdit();showLoupe(p)};
+EC.onpointermove=e=>{if(!drag)return;let p=epos(e),dx=p.x-drag.last.x,dy=p.y-drag.last.y;if(drag.type==='point'){editPts[drag.i].x+=dx;editPts[drag.i].y+=dy}else{editPts[drag.i].x+=dx;editPts[drag.i].y+=dy;editPts[drag.j].x+=dx;editPts[drag.j].y+=dy}drag.last=p;drawEdit();previewEdit();showLoupe(p)};
 EC.onpointerup=EC.onpointercancel=()=>{drag=null;loupeWrap.style.display='none'};
-function previewEdit(){
- const tmp={img:editImg,points:editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height}))};
- make16(tmp).then(r=>{EPC.clearRect(0,0,16,16);EPC.drawImage(r.canvas,0,0,16,16)});
-}
-saveEdit.onclick=async()=>{
- let it=items[currentEdit];it.points=editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height}));
- const r=await make16(it);it.pngBlob=r.blob;it.colors=extractColors(r.canvas);it.status='成功';it.statusClass='ok';
- localStorage.setItem("mcba_cal_v07",JSON.stringify(it.points));
- editModal.style.display='none';render();batchStatus.textContent="補正を保存しました";
-};
+function previewEdit(){let tmp={img:editImg,points:editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height}))};make16(tmp).then(r=>{EPC.clearRect(0,0,16,16);EPC.drawImage(r.canvas,0,0,16,16)})}
+$('autoThis').onclick=()=>{let prior=editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height})),a=autoDetect(editImg,prior);editPts=normToPx(a.points,EC.width,EC.height);drawEdit();previewEdit();batchStatus.textContent=`高精度再検出 信頼度 ${Math.round(a.confidence*100)}%`};
+$('saveEdit').onclick=async()=>{let it=items[currentEdit];it.points=editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height}));it.confidence=1;let r=await make16(it);it.pngBlob=r.blob;it.colors=extractColors(r.canvas);it.status='成功';it.statusClass='ok';editModal.style.display='none';render();batchStatus.textContent='補正を保存しました'};
+$('applyAll').onclick=async()=>{let p=editPts.map(q=>({x:q.x/EC.width,y:q.y/EC.height}));localStorage.setItem('mcba_v09_cal',JSON.stringify(p));for(let i=0;i<items.length;i++){items[i].points=clonePts(p);items[i].confidence=1;let r=await make16(items[i]);items[i].pngBlob=r.blob;items[i].colors=extractColors(r.canvas);items[i].status='成功';items[i].statusClass='ok'}editModal.style.display='none';render();batchStatus.textContent='基準範囲を保存し、全画像へ適用しました'};
 
-if('serviceWorker' in navigator){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}))}
+if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{}))}
 </script>
 </body>
 </html>
