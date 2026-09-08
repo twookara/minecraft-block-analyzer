@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Minecraft Block Analyzer v0.6</title>
+<style>
+:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1b1b1b;background:#f3f3f3}
+*{box-sizing:border-box}body{margin:0}.wrap{max-width:1120px;margin:auto;padding:14px}.card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:14px;margin-bottom:12px}
+h1{font-size:21px;margin:0 0 5px}h2{font-size:16px;margin:0 0 9px}.small{font-size:12px;color:#666}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}button,input{font:inherit}button{padding:10px 12px;border:1px solid #bbb;background:#fff;border-radius:8px}button.primary{background:#222;color:#fff}button:disabled{opacity:.4}
+canvas{max-width:100%;border:1px solid #aaa;border-radius:8px;background:#222;touch-action:none}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px}@media(max-width:800px){.grid{grid-template-columns:1fr}}
+#preview{width:128px;height:128px;image-rendering:pixelated}.status{padding:7px 9px;background:#f2f2f2;border-radius:7px;font-size:12px}
+.swatch{width:42px;height:42px;border:1px solid #aaa;border-radius:7px}.metric{font-size:12px;line-height:1.55}
+pre{font-size:11px;background:#f5f5f5;padding:9px;border-radius:8px;overflow:auto;max-height:280px}
+input[type=text]{padding:8px;border:1px solid #bbb;border-radius:7px;min-width:170px}
+#loupeWrap{position:fixed;right:14px;top:14px;z-index:50;display:none;background:#fff;border:2px solid #222;border-radius:14px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none}
+#loupe{width:180px;height:180px;border-radius:10px;border:1px solid #888;background:#111;image-rendering:pixelated}
+#loupeLabel{text-align:center;font-size:11px;color:#444;margin-top:3px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:none;align-items:center;justify-content:center;padding:14px}
+.modalBox{background:#fff;max-width:720px;width:100%;max-height:90vh;overflow:auto;border-radius:12px;padding:12px}
+.modalImg{display:block;width:256px;max-width:100%;height:auto;margin:auto;image-rendering:pixelated}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#202020">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Block Analyzer">
+<link rel="apple-touch-icon" href="icon-192.png">
+</head><body><div class="wrap">
+<div class="card"><h1>Minecraft Block Analyzer v0.6</h1>
+<div class="small">固定撮影環境向け。スクリーンショット読込時にブロック面の四隅を自動検出し、16×16の解析用擬似テクスチャを生成します。手動操作は自動検出失敗時の予備です。</div></div>
+
+<div class="card"><h2>1. 撮影画像</h2><div class="row">
+<input id="file" type="file" accept="image/*">
+<button id="autoDetect" class="primary">四隅を自動検出</button><button id="applyCal">保存座標を適用</button><button id="saveCal">現在位置を保存</button><button id="resetCal">初期値</button>
+<span id="status" class="status">画像を選択してください</span></div>
+<div class="small" style="margin-top:7px">画像を読み込むと自動検出が走ります。緑の枠がブロック面に合っていれば、そのまま解析できます。必要な場合だけ四隅または辺をドラッグして補正できます。</div></div>
+
+<div class="grid"><div class="card"><h2>2. 自動範囲／手動補正</h2><canvas id="source"></canvas></div>
+<div><div class="card"><h2>3. リアルタイムプレビュー</h2><canvas id="preview" width="16" height="16"></canvas>
+<div class="row" style="margin-top:8px"><button id="analyze" class="primary" disabled>色解析</button><button id="openImg" disabled>画像を開く</button></div>
+<div class="small" style="margin-top:6px">「画像を開く」でページ内に生成画像を表示します。iPhoneではその画像を長押しして保存できます。共有ボタンも利用できます。</div></div>
+<div class="card"><h2>ブロック情報</h2><div class="row">
+<input id="name" type="text" placeholder="表示名"><input id="mcid" type="text" placeholder="Minecraft ID">
+</div></div></div></div>
+
+<div class="card"><h2>4. 色解析</h2><div class="row">
+<div><div class="small">主色</div><div id="ps" class="swatch"></div></div><div id="pm" class="metric"></div>
+<div><div class="small">副色</div><div id="ss" class="swatch"></div></div><div id="sm" class="metric"></div>
+</div></div>
+
+<div class="card"><h2>5. DB用JSON</h2><div class="row"><button id="jsonOpen" disabled>JSONを開く</button><button id="copy" disabled>コピー</button></div><pre id="json">{}</pre></div>
+</div>
+<div id="loupeWrap"><canvas id="loupe" width="180" height="180"></canvas><div id="loupeLabel">補正位置ズーム</div></div>
+<div id="imgModal" class="modal"><div class="modalBox">
+<div class="row" style="justify-content:space-between;margin-bottom:8px"><strong>生成画像</strong><button id="closeModal">閉じる</button></div>
+<img id="modalImg" class="modalImg" alt="生成画像">
+<div class="small" style="margin-top:8px">iPhoneでは画像を長押しして「写真に保存」できます。共有対応端末では下のボタンも利用できます。</div>
+<div class="row" style="margin-top:8px"><button id="shareBtn">共有</button></div>
+</div></div>
+<script>
+const S=document.getElementById('source'),C=S.getContext('2d'),P=document.getElementById('preview'),PC=P.getContext('2d');
+const statusEl=document.getElementById('status'); let img=null,pts=[],drag=null,result=null;
+const loupeWrap=document.getElementById('loupeWrap'),loupe=document.getElementById('loupe'),LC=loupe.getContext('2d');
+const imgModal=document.getElementById('imgModal'),modalImg=document.getElementById('modalImg');
+const DEFAULT=[{x:.25,y:.2},{x:.75,y:.2},{x:.75,y:.8},{x:.25,y:.8}];
+function normPts(){return pts.map(p=>({x:p.x/S.width,y:p.y/S.height}))}
+function setNorm(a){pts=a.map(p=>({x:p.x*S.width,y:p.y*S.height}));draw();warp()}
+function saved(){try{return JSON.parse(localStorage.getItem("mcba_cal_v05"))||DEFAULT}catch{return DEFAULT}}
+function draw(){
+ C.clearRect(0,0,S.width,S.height);if(img)C.drawImage(img,0,0,S.width,S.height);if(!pts.length)return;
+ C.lineWidth=3;C.strokeStyle="#00ff88";C.fillStyle="#ffdd00";C.beginPath();pts.forEach((p,i)=>i?C.lineTo(p.x,p.y):C.moveTo(p.x,p.y));C.closePath();C.stroke();
+ pts.forEach((p,i)=>{C.beginPath();C.arc(p.x,p.y,9,0,Math.PI*2);C.fill();C.fillStyle="#111";C.font="12px sans-serif";C.fillText(i+1,p.x+12,p.y-10);C.fillStyle="#ffdd00"});
+ for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(pts[i].x+pts[j].x)/2,y:(pts[i].y+pts[j].y)/2};C.fillStyle="#00d9ff";C.beginPath();C.arc(m.x,m.y,7,0,Math.PI*2);C.fill()}
+}
+function autoDetectCorners(){
+ if(!img||!S.width||!S.height)return null;
+ // 固定撮影環境を前提に、想定位置の周辺だけを探索する。
+ // Harris系コーナースコア + 外周エッジ強度で、テクスチャ内部の模様より面の角を優先する。
+ const base=saved();
+ const w=S.width,h=S.height;
+ const off=document.createElement('canvas');off.width=w;off.height=h;
+ const oc=off.getContext('2d',{willReadFrequently:true});oc.drawImage(img,0,0,w,h);
+ const d=oc.getImageData(0,0,w,h).data, n=w*h;
+ const lum=new Float32Array(n),gx=new Float32Array(n),gy=new Float32Array(n);
+ for(let i=0;i<n;i++){const k=i*4;lum[i]=.2126*d[k]+.7152*d[k+1]+.0722*d[k+2]}
+ for(let y=1;y<h-1;y++)for(let x=1;x<w-1;x++){const i=y*w+x;gx[i]=(lum[i+1]-lum[i-1])*.5;gy[i]=(lum[i+w]-lum[i-w])*.5}
+ function scoreAt(x,y){
+   let a=0,b=0,c=0,edge=0; const r=3;
+   for(let yy=y-r;yy<=y+r;yy++)for(let xx=x-r;xx<=x+r;xx++){
+     const i=yy*w+xx,X=gx[i],Y=gy[i];a+=X*X;b+=X*Y;c+=Y*Y;edge+=Math.hypot(X,Y);
+   }
+   const det=a*c-b*b,tr=a+c;
+   return Math.max(0,det-.045*tr*tr) + edge*edge*0.025;
+ }
+ const corners=[]; let rawScores=[];
+ for(let ci=0;ci<4;ci++){
+   const ex=base[ci].x*w,ey=base[ci].y*h;
+   const rx=Math.max(28,Math.round(w*.16)),ry=Math.max(28,Math.round(h*.16));
+   const x0=Math.max(5,Math.round(ex-rx)),x1=Math.min(w-6,Math.round(ex+rx));
+   const y0=Math.max(5,Math.round(ey-ry)),y1=Math.min(h-6,Math.round(ey+ry));
+   let best={x:ex,y:ey,s:-1};
+   // 2px刻みで粗探索→周囲1pxで精密化
+   for(let y=y0;y<=y1;y+=2)for(let x=x0;x<=x1;x+=2){
+     const sc=scoreAt(x,y);
+     // 想定点から遠すぎる候補を少し抑制。固定環境なので誤検出防止に有効。
+     const dx=(x-ex)/rx,dy=(y-ey)/ry,weighted=sc/(1+.35*(dx*dx+dy*dy));
+     if(weighted>best.s)best={x,y,s:weighted};
+   }
+   let fine={...best};
+   for(let y=Math.max(5,best.y-3);y<=Math.min(h-6,best.y+3);y++)for(let x=Math.max(5,best.x-3);x<=Math.min(w-6,best.x+3);x++){
+     const sc=scoreAt(x,y);const dx=(x-ex)/rx,dy=(y-ey)/ry,weighted=sc/(1+.35*(dx*dx+dy*dy));if(weighted>fine.s)fine={x,y,s:weighted};
+   }
+   corners.push({x:fine.x,y:fine.y}); rawScores.push(fine.s);
+ }
+ function area(q){let a=0;for(let i=0;i<4;i++){let j=(i+1)%4;a+=q[i].x*q[j].y-q[j].x*q[i].y}return Math.abs(a)/2}
+ const ar=area(corners)/(w*h);
+ const lens=corners.map((p,i)=>Math.hypot(p.x-corners[(i+1)%4].x,p.y-corners[(i+1)%4].y));
+ const minL=Math.min(...lens),maxL=Math.max(...lens);
+ const mean=rawScores.reduce((a,b)=>a+b,0)/4;
+ const spread=Math.min(...rawScores)/(Math.max(...rawScores)||1);
+ // 面積・辺長・4角のスコアばらつきから簡易信頼度を出す。
+ let conf=0;
+ if(ar>.08&&ar<.75&&minL>Math.min(w,h)*.12&&maxL/minL<3.5)conf=.55;
+ if(conf&&spread>.08)conf+=.15;if(conf&&mean>1e6)conf+=.1;
+ conf=Math.min(.95,conf);
+ return {points:corners,confidence:conf};
+}
+function runAutoDetect(){
+ const r=autoDetectCorners();
+ if(!r){statusEl.textContent="自動検出できませんでした";return false}
+ if(r.confidence<.5){
+   // 誤検出で画像を壊すより固定条件の保存座標を優先
+   setNorm(saved());statusEl.textContent="自動検出の信頼度が低いため固定座標を使用しました";return false;
+ }
+ pts=r.points;draw();warp();statusEl.textContent=`四隅を自動検出しました（信頼度 ${Math.round(r.confidence*100)}%）`;return true;
+}
+document.getElementById('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let im=new Image();im.onload=()=>{img=im;let sc=Math.min(900/im.width,650/im.height,1);S.width=Math.round(im.width*sc);S.height=Math.round(im.height*sc);setNorm(saved());requestAnimationFrame(()=>runAutoDetect());document.getElementById('analyze').disabled=false;document.getElementById('openImg').disabled=false};im.src=URL.createObjectURL(f)};
+document.getElementById('autoDetect').onclick=()=>img&&runAutoDetect();
+document.getElementById('applyCal').onclick=()=>img&&setNorm(saved());
+document.getElementById('saveCal').onclick=()=>{if(!img)return;localStorage.setItem("mcba_cal_v05",JSON.stringify(normPts()));statusEl.textContent="現在の範囲を保存しました"};
+document.getElementById('resetCal').onclick=()=>img&&setNorm(DEFAULT);
+
+function pos(e){let r=S.getBoundingClientRect();return{x:(e.clientX-r.left)*S.width/r.width,y:(e.clientY-r.top)*S.height/r.height}}
+function hit(p){
+ let rad=30*S.width/S.getBoundingClientRect().width,b=-1,bd=1e9;
+ pts.forEach((q,i)=>{let d=Math.hypot(p.x-q.x,p.y-q.y);if(d<bd&&d<rad){bd=d;b=i}});
+ if(b>=0)return{type:"point",i:b,last:p};
+ for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(pts[i].x+pts[j].x)/2,y:(pts[i].y+pts[j].y)/2},d=Math.hypot(p.x-m.x,p.y-m.y);if(d<rad)return{type:"edge",i,j,last:p}}
+ return null;
+}
+function showLoupe(p){
+ if(!img)return; loupeWrap.style.display="block"; LC.clearRect(0,0,loupe.width,loupe.height);
+ const srcSize=36; const sx=Math.max(0,Math.min(S.width-srcSize,p.x-srcSize/2)); const sy=Math.max(0,Math.min(S.height-srcSize,p.y-srcSize/2));
+ LC.imageSmoothingEnabled=false; LC.drawImage(S,sx,sy,srcSize,srcSize,0,0,loupe.width,loupe.height);
+ LC.strokeStyle="#ff2d55";LC.lineWidth=2;LC.beginPath();LC.moveTo(90,0);LC.lineTo(90,180);LC.moveTo(0,90);LC.lineTo(180,90);LC.stroke();
+ LC.fillStyle="#fff";LC.strokeStyle="#111";LC.beginPath();LC.arc(90,90,5,0,Math.PI*2);LC.fill();LC.stroke();
+}
+function hideLoupe(){loupeWrap.style.display="none"}
+S.onpointerdown=e=>{if(!img)return;let p=pos(e);drag=hit(p);if(drag){S.setPointerCapture(e.pointerId);showLoupe(p)}};
+S.onpointermove=e=>{if(!drag)return;let p=pos(e),dx=p.x-drag.last.x,dy=p.y-drag.last.y;if(drag.type==="point"){pts[drag.i].x+=dx;pts[drag.i].y+=dy}else{pts[drag.i].x+=dx;pts[drag.i].y+=dy;pts[drag.j].x+=dx;pts[drag.j].y+=dy}drag.last=p;draw();warp();showLoupe(p)};
+S.onpointerup=S.onpointercancel=()=>{drag=null;hideLoupe()};
+
+function solve(A,b){let n=b.length,M=A.map((r,i)=>r.concat(b[i]));for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++)if(Math.abs(M[j][i])>Math.abs(M[m][i]))m=j;[M[i],M[m]]=[M[m],M[i]];let d=M[i][i];if(Math.abs(d)<1e-12)return null;for(let k=i;k<=n;k++)M[i][k]/=d;for(let j=0;j<n;j++)if(j!==i){let f=M[j][i];for(let k=i;k<=n;k++)M[j][k]-=f*M[i][k]}}return M.map(r=>r[n])}
+function H(from,to){let A=[],b=[];for(let i=0;i<4;i++){let{x,y}=from[i],u=to[i].x,v=to[i].y;A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}let h=solve(A,b);return h?[...h,1]:null}
+function inv(m){let[a,b,c,d,e,f,g,h,i]=m,A=e*i-f*h,B=-(d*i-f*g),Cc=d*h-e*g,D=-(b*i-c*h),E=a*i-c*g,F=-(a*h-b*g),G=b*f-c*e,Hh=-(a*f-c*d),I=a*e-b*d,det=a*A+b*B+c*Cc;return[A/det,D/det,G/det,B/det,E/det,Hh/det,Cc/det,F/det,I/det]}
+function mp(h,x,y){let z=h[6]*x+h[7]*y+h[8];return{x:(h[0]*x+h[1]*y+h[2])/z,y:(h[3]*x+h[4]*y+h[5])/z}}
+function warp(){
+ if(!img||pts.length!==4)return;
+ // 元スクリーンショットを256×256等へ一度展開せず、直接16×16へ再構成する。
+ // 各出力ピクセルは4×4のサブサンプルを平均し、微小な四隅誤差やジャギーを吸収する。
+ const tmp=document.createElement('canvas');tmp.width=img.width;tmp.height=img.height;
+ const tc=tmp.getContext('2d',{willReadFrequently:true});tc.drawImage(img,0,0);
+ const sd=tc.getImageData(0,0,img.width,img.height),od=PC.createImageData(16,16);
+ const fullPts=normPts().map(p=>({x:p.x*img.width,y:p.y*img.height}));
+ const hh=H(fullPts,[{x:0,y:0},{x:16,y:0},{x:16,y:16},{x:0,y:16}]);if(!hh)return;
+ const hi=inv(hh),N=4;
+ function bilinear(x,y,c){
+   x=Math.max(0,Math.min(img.width-1.001,x));y=Math.max(0,Math.min(img.height-1.001,y));
+   const x0=Math.floor(x),y0=Math.floor(y),x1=Math.min(img.width-1,x0+1),y1=Math.min(img.height-1,y0+1),fx=x-x0,fy=y-y0;
+   const i00=(y0*img.width+x0)*4+c,i10=(y0*img.width+x1)*4+c,i01=(y1*img.width+x0)*4+c,i11=(y1*img.width+x1)*4+c;
+   const a=sd.data[i00]*(1-fx)+sd.data[i10]*fx,b=sd.data[i01]*(1-fx)+sd.data[i11]*fx;
+   return a*(1-fy)+b*fy;
+ }
+ for(let y=0;y<16;y++)for(let x=0;x<16;x++){
+   let r=0,g=0,b=0;
+   for(let sy=0;sy<N;sy++)for(let sx=0;sx<N;sx++){
+     const u=x+(sx+.5)/N,v=y+(sy+.5)/N,q=mp(hi,u,v);
+     r+=bilinear(q.x,q.y,0);g+=bilinear(q.x,q.y,1);b+=bilinear(q.x,q.y,2);
+   }
+   const di=(y*16+x)*4,div=N*N;od.data[di]=Math.round(r/div);od.data[di+1]=Math.round(g/div);od.data[di+2]=Math.round(b/div);od.data[di+3]=255;
+ }
+ PC.putImageData(od,0,0);
+}
+function hsv(r,g,b){r/=255;g/=255;b/=255;let mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;if(d){if(mx===r)h=((g-b)/d)%6;else if(mx===g)h=(b-r)/d+2;else h=(r-g)/d+4;h*=60;if(h<0)h+=360}return[h,mx?d/mx*100:0,mx*100]}
+function lab(r,g,b){let a=[r,g,b].map(v=>{v/=255;return v>.04045?Math.pow((v+.055)/1.055,2.4):v/12.92});let X=(a[0]*.4124+a[1]*.3576+a[2]*.1805)/.95047,Y=a[0]*.2126+a[1]*.7152+a[2]*.0722,Z=(a[0]*.0193+a[1]*.1192+a[2]*.9505)/1.08883;a=[X,Y,Z].map(v=>v>.008856?Math.cbrt(v):7.787*v+16/116);return[116*a[1]-16,500*(a[0]-a[1]),200*(a[1]-a[2])]}
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1],a[2]-b[2])}
+function colors(){
+ let d=PC.getImageData(0,0,16,16).data,cs=[];
+ for(let i=0;i<d.length;i+=4){let rgb=[d[i],d[i+1],d[i+2]],l=lab(...rgb),best=-1,bd=1e9;cs.forEach((c,j)=>{let z=dist(l,c.lab);if(z<bd){bd=z;best=j}});if(best>=0&&bd<10){let c=cs[best];c.n++;c.sum=c.sum.map((v,k)=>v+rgb[k]);c.rgb=c.sum.map(v=>v/c.n);c.lab=lab(...c.rgb)}else cs.push({n:1,sum:[...rgb],rgb:[...rgb],lab:l})}
+ cs.sort((a,b)=>b.n-a.n);let total=256;return cs.slice(0,2).map(c=>{let rgb=c.rgb.map(Math.round),hv=hsv(...rgb),la=lab(...rgb);return{rgb,hsv:hv.map(v=>+v.toFixed(2)),lab:la.map(v=>+v.toFixed(2)),ratio:+(c.n/total).toFixed(4)}})
+}
+function hex(r){return"#"+r.map(v=>v.toString(16).padStart(2,"0")).join("")}
+function metric(c){return`占有率 ${(c.ratio*100).toFixed(1)}%<br>RGB ${c.rgb.join(", ")}<br>HSV ${c.hsv.join(", ")}<br>Lab ${c.lab.join(", ")}`}
+document.getElementById('analyze').onclick=()=>{let c=colors();if(c.length<2)c[1]=c[0];ps.style.background=hex(c[0].rgb);ss.style.background=hex(c[1].rgb);pm.innerHTML=metric(c[0]);sm.innerHTML=metric(c[1]);
+ result={schema_version:"0.5",name:name.value||null,minecraft_id:mcid.value||null,image_source:"standardized_game_screenshot",crop_points_normalized:normPts(),texture_size:"16x16",display_size:"128x128",analysis_size:"16x16",reconstruction_method:"direct_16x16_area_supersampling_4x4",primary_color:c[0],secondary_color:c[1],color_spaces:["RGB","HSV","Lab"]};json.textContent=JSON.stringify(result,null,2);jsonOpen.disabled=copy.disabled=false;statusEl.textContent="解析完了"};
+function canvasDataURL(){return P.toDataURL("image/png")}
+document.getElementById('openImg').onclick=()=>{modalImg.src=canvasDataURL();imgModal.style.display="flex"};
+document.getElementById('closeModal').onclick=()=>imgModal.style.display="none";
+imgModal.addEventListener('click',e=>{if(e.target===imgModal)imgModal.style.display="none"});
+document.getElementById('shareBtn').onclick=async()=>{
+ try{const blob=await new Promise(r=>P.toBlob(r,"image/png"));const file=new File([blob],"minecraft_block_16x16.png",{type:"image/png"});
+ if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){await navigator.share({files:[file],title:"Minecraft Block 16x16"});return}
+ statusEl.textContent="共有非対応です。表示画像を長押しして保存してください"}catch(err){statusEl.textContent="共有できませんでした。画像を長押しして保存してください"}
+};
+document.getElementById('jsonOpen').onclick=()=>{const text=JSON.stringify(result,null,2);const w=window.open("about:blank","_blank");if(w){const blob=new Blob([text],{type:"application/json"});const u=URL.createObjectURL(blob);w.location.href=u;setTimeout(()=>URL.revokeObjectURL(u),60000)}else statusEl.textContent="JSONを開けませんでした。コピーを使用してください"};
+document.getElementById('copy').onclick=async()=>{await navigator.clipboard.writeText(JSON.stringify(result,null,2));statusEl.textContent="JSONをコピーしました"};
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('SW registration failed', err));
+  });
+}
+</script>
+</body></html>
