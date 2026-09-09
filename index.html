@@ -711,16 +711,31 @@ const uploadView=document.getElementById('uploadView');
 const resultsView=document.getElementById('resultsView');
 const backToUpload=document.getElementById('backToUpload');
 function showUpload(){
+  uploadView.hidden=false;
   uploadView.classList.add('active');
+  resultsView.hidden=true;
   resultsView.classList.remove('active');
   window.scrollTo({top:0,behavior:'auto'});
 }
 function showResults(){
+  uploadView.hidden=true;
   uploadView.classList.remove('active');
+  resultsView.hidden=false;
   resultsView.classList.add('active');
   window.scrollTo({top:0,behavior:'auto'});
 }
-backToUpload?.addEventListener('click',()=>{window.location.href='./index.html'});
+function applyRoute(){
+  if(location.hash==='#results' && items.length && items.some(it=>it.status!=='未解析')){
+    showResults();
+  }else{
+    showUpload();
+  }
+}
+backToUpload?.addEventListener('click',()=>{
+  history.replaceState(null,'',location.pathname+location.search);
+  showUpload();
+});
+window.addEventListener('hashchange',applyRoute);
 </script>
 <script>
 const $=id=>document.getElementById(id);
@@ -786,7 +801,7 @@ refreshAnalyzeButton();
    items.push({file:f,url,img,name:ex?ex.name:base,minecraft_id:ex?ex.id:'',status:'未解析',statusClass:'warn',points:getCal()||clonePts(DEFAULT),confidence:null,pngBlob:null,colors:null});
  }
  batchStatus.textContent=`${items.length}枚を読み込みました`;
- render();setButtons();showUpload();
+ render();setButtons();history.replaceState(null,'',location.pathname+location.search);showUpload();
 };
 
 function attachSuggest(input,idInput,box,it){
@@ -839,7 +854,7 @@ $('useFilenames').onclick=()=>{items.forEach(it=>{let b=safeBase(it.file.name),e
 $('cleanNames').onclick=()=>{items.forEach(it=>it.name=cleanDisplay(it.name));render()};
 $('pullNames').onclick=()=>$('bulkNames').value=items.map(it=>it.name).join('\n');
 $('applyBulkNames').onclick=()=>{let a=$('bulkNames').value.split(/\r?\n/);items.forEach((it,i)=>{if(a[i]?.trim()){it.name=a[i].trim();let ex=exactEntry(it.name);if(ex){it.name=ex.name;it.minecraft_id=ex.id}}});render()};
-$('clearAll').onclick=()=>{items=[];results.innerHTML='';filesInput.value='';setButtons();batchStatus.textContent='画像を選択してください'};
+$('clearAll').onclick=()=>{items=[];results.innerHTML='';filesInput.value='';setButtons();batchStatus.textContent='画像を選択してください';history.replaceState(null,'',location.pathname+location.search);showUpload()};
 
 $('importDict').onclick=()=>$('dictFile').click();
 $('dictFile').onchange=async e=>{
@@ -988,8 +1003,8 @@ $('analyzeAll').onclick=async()=>{
    }
    batchStatus.textContent=`${items.length}枚の処理完了`;
    render();
-   await saveAnalysisSession();
-   window.location.href='./results.html';
+   window.location.hash='results';
+   showResults();
  }finally{
    $('analyzeAll').disabled=false;
  }
