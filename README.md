@@ -115,3 +115,13 @@
 - セクションごとにロゴ色のアクセントを付与
 - 明度・彩度のみ調整した派生色を使用
 - PWAキャッシュ mcba-v145
+
+
+## Dictionary expansion
+- language.zip の ja_JP.lang / en_US.lang から名称辞書を生成
+- 辞書登録: 1852件
+- 未解決キー: 398件（別ファイルへ保持）
+- Vanillaの直接 tile key、各Add-Onの namespace付き tile keyを収録
+- BOPの item key型ブロック候補も別statusで収録
+- 既存localStorage辞書はベース辞書を上書きせず、ID単位でマージする方式へ修正
+- PWAキャッシュ mcba-v146

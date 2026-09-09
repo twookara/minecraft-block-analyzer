@@ -1,0 +1,546 @@
+[
+  {
+    "source": "minecraft",
+    "translation_key": "tile.mud_brick_double_slab",
+    "ja": "泥レンガのダブル ハーフブロック",
+    "en": "Mud Brick Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.beacon.primary",
+    "ja": "主効果",
+    "en": "Primary Power",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.beacon.secondary",
+    "ja": "副効果",
+    "en": "Secondary Power",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.beacon.primary.pocket",
+    "ja": "一次",
+    "en": "Primary",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.beacon.secondary.pocket",
+    "ja": "二次",
+    "en": "Secondary",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.noSleep",
+    "ja": "夜間または雷雨のときにしか眠ることはできません",
+    "en": "You can only sleep at night or during thunderstorms",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.notSafe",
+    "ja": "モンスターが近くにいるため眠ることができません",
+    "en": "You may not rest now, there are monsters nearby",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.notValid",
+    "ja": "最後に使用したベッドがなくなっているか、アクセスできません",
+    "en": "Your home bed was missing or obstructed",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.occupied",
+    "ja": "このベッドは既に使われています",
+    "en": "This bed is occupied",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.respawnSet",
+    "ja": "リスポーン地点が設定されました",
+    "en": "Respawn point set",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.tooFar",
+    "ja": "ベッドから離れすぎています",
+    "en": "Bed is too far away",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.bed.obstructed",
+    "ja": "ベッドがふさがっている",
+    "en": "Bed is obstructed",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.respawn_anchor.respawnSet",
+    "ja": "リスポーン地点が設定されました",
+    "en": "Respawn point set",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.respawn_anchor.notValid",
+    "ja": "あなたのリスポーンアンカーは、残量切れとなったか、破壊されたか、もしくは何かにふさがりました",
+    "en": "Your respawn anchor was out of charges, missing or obstructed",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.fern.name",
+    "ja": "大きなシダ",
+    "en": "Large Fern",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.grass.name",
+    "ja": "背の高い草",
+    "en": "Tall Grass",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.paeonia.name",
+    "ja": "ボタン",
+    "en": "Peony",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.rose.name",
+    "ja": "バラの低木",
+    "en": "Rose Bush",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.sunflower.name",
+    "ja": "ヒマワリ",
+    "en": "Sunflower",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_plant.syringa.name",
+    "ja": "ライラック",
+    "en": "Lilac",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.netherreactor.active",
+    "ja": "起動!",
+    "en": "Active!",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.netherreactor.builtTooHigh",
+    "ja": "もっと低い場所にネザーリアクターを建ててください。",
+    "en": "The nether reactor needs to be built lower down.",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.netherreactor.builtTooLow",
+    "ja": "もっと高い場所にネザーリアクターを建ててください。",
+    "en": "The nether reactor needs to be built higher up.",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.netherreactor.playersTooFar",
+    "ja": "全てのプレイヤーがリアクターの近くにいる必要があります。",
+    "en": "All players need to be close to the reactor.",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.netherreactor.wrongPattern",
+    "ja": "パターンが間違っています!",
+    "en": "Not the correct pattern!",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_non_block_message"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.brick.name",
+    "ja": "レンガのハーフブロック",
+    "en": "Brick Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.cobble.name",
+    "ja": "丸石のハーフブロック",
+    "en": "Cobblestone Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.nether_brick.name",
+    "ja": "ネザーレンガのハーフブロック",
+    "en": "Nether Brick Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.quartz.name",
+    "ja": "クォーツのハーフブロック",
+    "en": "Quartz Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.sand.name",
+    "ja": "砂岩のハーフブロック",
+    "en": "Sandstone Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.smoothStoneBrick.name",
+    "ja": "石レンガのハーフブロック",
+    "en": "Stone Brick Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.stone.name",
+    "ja": "石のハーフブロック",
+    "en": "Stone Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab.wood.name",
+    "ja": "木材ハーフブロック",
+    "en": "Wooden Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.red_sandstone.name",
+    "ja": "赤い砂岩のハーフブロック",
+    "en": "Red Sandstone Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.purpur.name",
+    "ja": "プルプァのダブル ハーフブロック",
+    "en": "Purpur Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.prismarine.rough.name",
+    "ja": "プリズマリンのダブル ハーフブロック",
+    "en": "Prismarine DoubleSlab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.prismarine.dark.name",
+    "ja": "ダークプリズマリンのダブル ハーフブロック",
+    "en": "Dark Prismarine Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.prismarine.bricks.name",
+    "ja": "プリズマリンレンガのダブル ハーフブロック",
+    "en": "Prismarine Brick Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.mossy_cobblestone.name",
+    "ja": "苔むした丸石のダブル ハーフブロック",
+    "en": "Mossy Cobblestone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.red_nether_brick.name",
+    "ja": "赤いネザーレンガのダブル ハーフブロック",
+    "en": "Red Nether Brick Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab2.sandstone.smooth.name",
+    "ja": "滑らかな砂岩のダブル ハーフブロック",
+    "en": "Smooth Sandstone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.end_brick.name",
+    "ja": "エンドストーンレンガのダブル ハーフブロック",
+    "en": "End Stone Brick Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.red_sandstone.smooth.name",
+    "ja": "滑らかな赤い砂岩のダブル ハーフブロック",
+    "en": "Smooth Red Sandstone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.andesite.smooth.name",
+    "ja": "磨かれた安山岩のダブル ハーフブロック",
+    "en": "Polished Andesite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.andesite.name",
+    "ja": "安山岩のダブル ハーフブロック",
+    "en": "Andesite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.diorite.name",
+    "ja": "閃緑岩のダブル ハーフブロック",
+    "en": "Diorite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.diorite.smooth.name",
+    "ja": "磨かれた閃緑岩のダブル ハーフブロック",
+    "en": "Polished Diorite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.granite.name",
+    "ja": "花崗岩のダブル ハーフブロック",
+    "en": "Granite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab3.granite.smooth.name",
+    "ja": "磨かれた花崗岩のダブル ハーフブロック",
+    "en": "Polished Granite Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab4.mossy_stone_brick.name",
+    "ja": "苔むした石レンガのダブル ハーフブロック",
+    "en": "Mossy Stone Brick Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab4.smooth_quartz.name",
+    "ja": "滑らかなクォーツのダブル ハーフブロック",
+    "en": "Smooth Quartz Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab4.stone.name",
+    "ja": "石のダブル ハーフブロック",
+    "en": "Stone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab4.cut_sandstone.name",
+    "ja": "研がれた砂岩のダブル ハーフブロック",
+    "en": "Cut Sandstone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_stone_slab4.cut_red_sandstone.name",
+    "ja": "研がれた赤い砂岩のダブル ハーフブロック",
+    "en": "Cut Red Sandstone Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.acacia.name",
+    "ja": "アカシアのダブル ハーフブロック",
+    "en": "Acacia Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.big_oak.name",
+    "ja": "ダークオークのダブル ハーフブロック",
+    "en": "Dark Oak Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.birch.name",
+    "ja": "シラカバのダブル ハーフブロック",
+    "en": "Birch Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.jungle.name",
+    "ja": "ジャングルのダブル ハーフブロック",
+    "en": "Jungle Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.oak.name",
+    "ja": "オークのダブル ハーフブロック",
+    "en": "Oak Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.double_wooden_slab.spruce.name",
+    "ja": "トウヒのダブル ハーフブロック",
+    "en": "Spruce Double Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_double_slab_or_double_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.brown_mushroom_block.mushroom.name",
+    "ja": "きのこ",
+    "en": "Mushroom",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_legacy_mushroom_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.purpur_block.chiseled.name",
+    "ja": "模様入りプルプァ",
+    "en": "Chiseled Purpur",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_nonexistent_or_unneeded_purpur_full_block_variant"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.chalkboard.oneByOne.name",
+    "ja": "スレート",
+    "en": "Slate",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.chalkboard.twoByOne.name",
+    "ja": "ポスター",
+    "en": "Poster",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.chalkboard.threeByTwo.name",
+    "ja": "ボード",
+    "en": "Board",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.stonebrick.smooth.name",
+    "ja": "滑らかな石のレンガ",
+    "en": "Smooth Stone Bricks",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.stone_slab.wood.name",
+    "ja": "木材ハーフブロック",
+    "en": "Wooden Slab",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  },
+  {
+    "source": "minecraft",
+    "translation_key": "tile.tallgrass.shrub.name",
+    "ja": "低木",
+    "en": "Shrub",
+    "reason": "variant_or_legacy_translation_key",
+    "decision": "exclude_user_confirmed_not_in_play_environment_or_education"
+  }
+]
