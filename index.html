@@ -283,7 +283,7 @@ canvas{
   border:2px solid #20242A;
   border-radius:10px;
   box-shadow:4px 4px 0 rgba(32,36,42,.28);
-  max-height:240px;
+  max-height:min(52vh,420px);
   overflow:auto;
   display:none;
 }
@@ -434,6 +434,148 @@ input[type=text]:focus,textarea:focus{
 .card:nth-of-type(4) h2:before{background:var(--logo-yellow);color:#111}
 .card:nth-of-type(5) h2:before{background:var(--logo-blue-dark);color:#fff}
 
+
+/* Large autocomplete candidate panel */
+.suggest,
+.suggestions,
+.autocomplete-list,
+.autocomplete-results,
+.dropdown-list,
+.search-suggestions {
+  max-height: min(52vh, 420px) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+}
+.suggest > *,
+.suggestions > *,
+.autocomplete-list > *,
+.autocomplete-results > *,
+.dropdown-list > *,
+.search-suggestions > * {
+  min-height: 44px;
+}
+
+
+
+/* Balanced result cards */
+.item{
+  position:relative;
+  display:grid;
+  grid-template-columns:112px minmax(0,1fr);
+  gap:12px;
+  align-items:start;
+  overflow:visible !important;
+  padding:12px;
+}
+.item .thumb{
+  width:112px;
+  height:112px;
+  margin:0;
+}
+.resultMain{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+.resultMain .badge{
+  align-self:flex-start;
+  margin:0;
+  position:static;
+}
+.nameFieldWrap{
+  position:relative;
+  min-width:0;
+}
+.nameFieldWrap .nameInput,
+.resultMain .idInput{
+  width:100%;
+  margin:0;
+}
+.nameFieldWrap .suggest{
+  left:0;
+  right:0;
+  top:calc(100% + 4px);
+  max-height:min(42vh,360px) !important;
+  overflow-y:auto !important;
+  z-index:80;
+}
+.resultActions{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:1px;
+}
+.resultActions button{
+  min-height:40px;
+  padding:7px 9px;
+  margin:0 !important;
+  font-size:12px;
+  box-shadow:2px 2px 0 #24313A;
+}
+.item:focus-within{z-index:70}
+
+@media(max-width:800px){
+  .item{
+    grid-template-columns:96px minmax(0,1fr);
+    gap:10px;
+    padding:10px;
+  }
+  .item .thumb{
+    width:96px;
+    height:96px;
+  }
+  .resultMain{gap:6px}
+  .resultActions{gap:6px}
+  .resultActions button{
+    min-height:36px;
+    padding:6px 7px;
+    font-size:11px;
+  }
+  .nameFieldWrap .suggest{
+    max-height:min(36vh,300px) !important;
+  }
+}
+
+
+/* Two-step flow: upload page -> results page */
+.view{display:none}
+.view.active{display:block}
+#uploadView .card{max-width:760px;margin-left:auto;margin-right:auto}
+#resultsView .topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  margin:8px 0 14px;
+}
+#resultsView .topbar button{
+  min-height:38px;
+  padding:7px 12px;
+  font-size:12px;
+}
+
+
+/* iPhone / PWA top safe-area spacing */
+:root{
+  --app-safe-top: env(safe-area-inset-top, 0px);
+}
+body{
+  padding-top: calc(var(--app-safe-top) + 14px);
+}
+header,
+.header,
+.hero,
+.logoWrap,
+.header-logo-wrap{
+  scroll-margin-top: calc(var(--app-safe-top) + 14px);
+}
+@media (display-mode: standalone){
+  body{
+    padding-top: calc(var(--app-safe-top) + 18px);
+  }
+}
+
 </style>
 
 
@@ -443,6 +585,7 @@ input[type=text]:focus,textarea:focus{
 </head>
 <body>
 <div class="wrap">
+<section id="uploadView" class="view active">
 <div class="card">
 <div class="headerImageWrap"><img class="headerImage" src="./header-logo.png" alt="Minecraft Block Analyzer"></div>
 <div class="small">撮影したブロックを、切り出し・色解析・ID整理までまとめて処理。</div>
@@ -452,37 +595,17 @@ input[type=text]:focus,textarea:focus{
 <h2>スクリーンショット</h2>
 <div class="row">
 <input id="files" type="file" accept="image/*" multiple>
-<button id="analyzeAll" class="primary" disabled>一括解析</button>
+<button id="analyzeAll" class="primary">一括解析</button>
 <button id="clearAll">全消去</button>
 <span id="batchStatus" class="status">画像を選択してください</span>
 </div>
 <details class="helpCompact"><summary>精度を優先する場合</summary><div class="small">最初の1枚を手動補正し、「この範囲を全画像に適用」。保存範囲は次回の検出基準にも使われます。</div></details>
 </div>
 
-<div class="card">
-<h2>名前とID</h2>
-<div class="grid2">
-<div>
-<div class="row"><button id="useFilenames">ファイル名を名前にする</button><button id="cleanNames">名前を整形</button></div>
-<div class="small" style="margin-top:6px">日本語名を入力すると辞書から候補を表示し、候補選択で正式IDを自動入力します。</div>
-</div>
-<div>
-<div class="row">
-<span id="dictStat" class="dictStat"></span>
-<button id="importDict">辞書JSON追加</button>
-<input id="dictFile" type="file" accept=".json,application/json" hidden>
-<button id="exportDict">辞書JSON保存</button>
-</div>
-<div class="small">辞書形式: [{"name":"オークの板材","id":"minecraft:oak_planks","aliases":["オーク板材"]}]</div>
-</div>
-</div>
-<div style="margin-top:10px">
-<div class="small">一括名前入力（1行＝1画像、選択順）。辞書に一致すればIDも同時入力。</div>
-<textarea id="bulkNames" placeholder="オークの板材&#10;丸石&#10;ダイヤモンドブロック"></textarea>
-<div class="row"><button id="applyBulkNames">名前＋IDを一括適用</button><button id="pullNames">現在の名前をここへ読み込む</button></div>
-</div>
-</div>
 
+</section>
+<section id="resultsView" class="view">
+<div class="topbar"><button id="backToUpload" type="button">← 画像選択へ戻る</button><span class="small">解析結果</span></div>
 <div class="card">
 <h2>解析結果</h2>
 <div id="results" class="list"></div>
@@ -500,7 +623,7 @@ input[type=text]:focus,textarea:focus{
 <div class="grid2" style="margin-top:10px">
 <div><canvas id="editCanvas"></canvas></div>
 <div>
-<div class="small">黄色＝四隅、青＝辺中央。ドラッグで補正できます。</div>
+<div class="small">黄色＝四隅、青＝辺中央。上下辺は上下方向のみ、左右辺は左右方向のみ動きます。</div>
 <canvas id="editPreview" width="16" height="16"></canvas>
 <div class="row" style="margin-top:9px">
 <button id="autoThis">この画像を高精度再検出</button>
@@ -513,7 +636,42 @@ input[type=text]:focus,textarea:focus{
 </div>
 <div id="loupeWrap"><canvas id="loupe" width="180" height="180"></canvas></div>
 
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+</section>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js">
+function refreshAnalyzeButton(){
+  const fileInput =
+    document.querySelector('input[type="file"][multiple]') ||
+    document.querySelector('input[type="file"]');
+  const btn =
+    document.getElementById('analyzeAllBtn') ||
+    document.getElementById('runAll') ||
+    document.querySelector('button[data-action="analyze-all"]') ||
+    [...document.querySelectorAll('button')].find(b=>/一括解析|解析開始/.test(b.textContent||''));
+  if(btn && fileInput){
+    btn.disabled = !(fileInput.files && fileInput.files.length > 0);
+  }
+}
+document.addEventListener('change',e=>{
+  if(e.target && e.target.matches('input[type="file"]')) refreshAnalyzeButton();
+});
+document.addEventListener('DOMContentLoaded',refreshAnalyzeButton);
+
+const uploadView=document.getElementById('uploadView');
+const resultsView=document.getElementById('resultsView');
+const backToUpload=document.getElementById('backToUpload');
+function showUpload(){
+  uploadView.classList.add('active');
+  resultsView.classList.remove('active');
+  window.scrollTo({top:0,behavior:'auto'});
+}
+function showResults(){
+  uploadView.classList.remove('active');
+  resultsView.classList.add('active');
+  window.scrollTo({top:0,behavior:'auto'});
+}
+backToUpload?.addEventListener('click',showUpload);
+</script>
 <script>
 const $=id=>document.getElementById(id);
 const filesInput=$('files'),results=$('results'),batchStatus=$('batchStatus');
@@ -569,6 +727,7 @@ function setButtons(){let on=items.length>0;$('analyzeAll').disabled=!on;$('expo
 
 filesInput.onchange=async e=>{
  items=[];
+refreshAnalyzeButton();
  for(const f of [...e.target.files]){
    const url=URL.createObjectURL(f),img=new Image();
    await new Promise((res,rej)=>{img.onload=res;img.onerror=rej;img.src=url});
@@ -598,20 +757,31 @@ function attachSuggest(input,idInput,box,it){
  input.onblur=()=>setTimeout(()=>box.style.display='none',180);
 }
 function render(){
+ if(items.some(it=>it.status||it.pngBlob)) showResults();
  results.innerHTML='';
  items.forEach((it,i)=>{
    const d=document.createElement('div');d.className=`item ${it.statusClass}`;
+
    const cv=document.createElement('canvas');cv.width=16;cv.height=16;cv.className='thumb';
    const c=cv.getContext('2d');c.imageSmoothingEnabled=false;c.fillStyle='#222';c.fillRect(0,0,16,16);
    if(it.pngBlob){const u=URL.createObjectURL(it.pngBlob),im=new Image();im.onload=()=>{c.drawImage(im,0,0,16,16);URL.revokeObjectURL(u)};im.src=u}
+
+   const main=document.createElement('div');main.className='resultMain';
    const badge=document.createElement('span');badge.className=`badge ${it.statusClass}`;badge.textContent=it.status+(it.confidence!=null?` ${Math.round(it.confidence*100)}%`:'');
-   const fn=document.createElement('div');fn.className='small';fn.textContent=it.file.name;
+   const fieldWrap=document.createElement('div');fieldWrap.className='nameFieldWrap';
    const n=document.createElement('input');n.className='nameInput';n.value=it.name;n.placeholder='日本語名 / ID / 別名';
    const id=document.createElement('input');id.className='idInput';id.value=it.minecraft_id;id.placeholder='minecraft_id';id.oninput=()=>it.minecraft_id=id.value;
    const box=document.createElement('div');box.className='suggest';
+   fieldWrap.append(n,box);
+
+   const actions=document.createElement('div');actions.className='resultActions';
    const b1=document.createElement('button');b1.textContent='手動補正';b1.onclick=()=>openEdit(i);
-   const b2=document.createElement('button');b2.textContent='高精度再検出';b2.onclick=async()=>{await analyzeItem(i,true);render()};
-   d.append(cv,badge,fn,n,id,box,b1,b2);results.appendChild(d);
+   const b2=document.createElement('button');b2.textContent='再検出';b2.onclick=async()=>{await analyzeItem(i,true);render()};
+   actions.append(b1,b2);
+
+   main.append(badge,fieldWrap,id,actions);
+   d.append(cv,main);
+   results.appendChild(d);
    attachSuggest(n,id,box,it);
  });
 }
@@ -702,8 +872,8 @@ function intersect(l1,mode1,l2,mode2){
  let den=1-a*c;if(Math.abs(den)<1e-8)return null;
  let x=(a*d+b)/den,y=c*x+d;return{x,y};
 }
-function autoDetect(img,prior=null){
- const d=grayData(img),{w,h}=d,p=prior||getCal()||DEFAULT;
+function autoDetectSingle(img,p){
+ const d=grayData(img),{w,h}=d;
  let lp=sampleEdgePoints(d,'left',p),rp=sampleEdgePoints(d,'right',p),tp=sampleEdgePoints(d,'top',p),bp=sampleEdgePoints(d,'bottom',p);
  let L=robustLine(lp,'x_of_y'),R=robustLine(rp,'x_of_y'),T=robustLine(tp,'y_of_x'),B=robustLine(bp,'y_of_x');
  if(!L||!R||!T||!B)return{points:clonePts(p),confidence:0};
@@ -721,6 +891,19 @@ function autoDetect(img,prior=null){
  let confidence=Math.max(0,Math.min(1,geom*(.5*fit+.3*support+.2*driftScore)));
  return{points:pts,confidence,debug:{rmse:rm,support}};
 }
+
+function autoDetect(img,prior=null){
+ const saved = prior || getCal();
+ const candidates = [];
+ if(saved) candidates.push(autoDetectSingle(img,saved));
+ candidates.push(autoDetectSingle(img,DEFAULT));
+ let best=candidates[0];
+ for(const c of candidates){
+   if(!best || c.confidence>best.confidence) best=c;
+ }
+ return best;
+}
+
 
 function solve(A,b){let n=b.length,M=A.map((r,i)=>r.concat(b[i]));for(let i=0;i<n;i++){let m=i;for(let j=i+1;j<n;j++)if(Math.abs(M[j][i])>Math.abs(M[m][i]))m=j;[M[i],M[m]]=[M[m],M[i]];let d=M[i][i];if(Math.abs(d)<1e-12)return null;for(let k=i;k<=n;k++)M[i][k]/=d;for(let j=0;j<n;j++)if(j!==i){let f=M[j][i];for(let k=i;k<=n;k++)M[j][k]-=f*M[i][k]}}return M.map(r=>r[n])}
 function H(from,to){let A=[],b=[];for(let i=0;i<4;i++){let{x,y}=from[i],u=to[i].x,v=to[i].y;A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}let h=solve(A,b);return h?[...h,1]:null}
@@ -767,7 +950,20 @@ function epos(e){let r=EC.getBoundingClientRect();return{x:(e.clientX-r.left)*EC
 function ehit(p){let rad=30*EC.width/EC.getBoundingClientRect().width;for(let i=0;i<4;i++)if(Math.hypot(p.x-editPts[i].x,p.y-editPts[i].y)<rad)return{type:'point',i,last:p};for(let i=0;i<4;i++){let j=(i+1)%4,m={x:(editPts[i].x+editPts[j].x)/2,y:(editPts[i].y+editPts[j].y)/2};if(Math.hypot(p.x-m.x,p.y-m.y)<rad)return{type:'edge',i,j,last:p}}return null}
 function showLoupe(p){loupeWrap.style.display='block';LC.clearRect(0,0,180,180);let ss=36,sx=Math.max(0,Math.min(EC.width-ss,p.x-ss/2)),sy=Math.max(0,Math.min(EC.height-ss,p.y-ss/2));LC.imageSmoothingEnabled=false;LC.drawImage(EC,sx,sy,ss,ss,0,0,180,180);LC.strokeStyle='#ff2d55';LC.lineWidth=2;LC.beginPath();LC.moveTo(90,0);LC.lineTo(90,180);LC.moveTo(0,90);LC.lineTo(180,90);LC.stroke()}
 EC.onpointerdown=e=>{let p=epos(e);drag=ehit(p);if(drag){EC.setPointerCapture(e.pointerId);showLoupe(p)}};
-EC.onpointermove=e=>{if(!drag)return;let p=epos(e),dx=p.x-drag.last.x,dy=p.y-drag.last.y;if(drag.type==='point'){editPts[drag.i].x+=dx;editPts[drag.i].y+=dy}else{editPts[drag.i].x+=dx;editPts[drag.i].y+=dy;editPts[drag.j].x+=dx;editPts[drag.j].y+=dy}drag.last=p;drawEdit();previewEdit();showLoupe(p)};
+EC.onpointermove=e=>{if(!drag)return;let p=epos(e),dx=p.x-drag.last.x,dy=p.y-drag.last.y;
+ if(drag.type==='point'){
+   editPts[drag.i].x+=dx;editPts[drag.i].y+=dy
+ }else{
+   // edge 0/2 = top/bottom: move only vertically.
+   // edge 1/3 = right/left: move only horizontally.
+   if(drag.i===0||drag.i===2){
+     editPts[drag.i].y+=dy;editPts[drag.j].y+=dy
+   }else{
+     editPts[drag.i].x+=dx;editPts[drag.j].x+=dx
+   }
+ }
+ drag.last=p;drawEdit();previewEdit();showLoupe(p)
+};
 EC.onpointerup=EC.onpointercancel=()=>{drag=null;loupeWrap.style.display='none'};
 function previewEdit(){let tmp={img:editImg,points:editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height}))};make16(tmp).then(r=>{EPC.clearRect(0,0,16,16);EPC.drawImage(r.canvas,0,0,16,16)})}
 $('autoThis').onclick=()=>{let prior=editPts.map(p=>({x:p.x/EC.width,y:p.y/EC.height})),a=autoDetect(editImg,prior);editPts=normToPx(a.points,EC.width,EC.height);drawEdit();previewEdit();batchStatus.textContent=`高精度再検出 信頼度 ${Math.round(a.confidence*100)}%`};
