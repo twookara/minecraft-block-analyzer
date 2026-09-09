@@ -585,7 +585,7 @@ header,
 </head>
 <body>
 <div class="wrap">
-<section id="uploadView" class="view active">
+<section id="uploadView" class="view" hidden>
 <div class="card">
 <div class="headerImageWrap"><img class="headerImage" src="./header-logo.png" alt="Minecraft Block Analyzer"></div>
 <div class="small">撮影したブロックを、切り出し・色解析・ID整理までまとめて処理。</div>
@@ -604,7 +604,7 @@ header,
 
 
 </section>
-<section id="resultsView" class="view" hidden>
+<section id="resultsView" class="view active">
 <div class="topbar"><button id="backToUpload" type="button">← 画像選択へ戻る</button><span class="small">解析結果</span></div>
 <div class="card">
 <h2>解析結果</h2>
@@ -710,11 +710,7 @@ document.addEventListener('DOMContentLoaded',refreshAnalyzeButton);
 const uploadView=document.getElementById('uploadView');
 const resultsView=document.getElementById('resultsView');
 const backToUpload=document.getElementById('backToUpload');
-function showUpload(){
-  uploadView.classList.add('active');
-  resultsView.classList.remove('active');
-  window.scrollTo({top:0,behavior:'auto'});
-}
+function showUpload(){window.location.href='./index.html'}
 function showResults(){
   uploadView.classList.remove('active');
   resultsView.classList.add('active');
@@ -1043,6 +1039,23 @@ window.addEventListener("load", async () => {
   } catch (e) {
     document.documentElement.dataset.bestTenFont = "missing";
     console.warn("BestTen font load error", e);
+  }
+});
+</script>
+
+
+<script>
+window.addEventListener('DOMContentLoaded',async()=>{
+  try{
+    await loadAnalysisSession();
+    render();
+    setButtons();
+    document.getElementById('uploadView')?.setAttribute('hidden','');
+    const rv=document.getElementById('resultsView');
+    if(rv){rv.hidden=false;rv.classList.add('active')}
+  }catch(err){
+    const r=document.getElementById('results');
+    if(r) r.innerHTML='<div class="card">解析データを読み込めませんでした。画像選択画面からもう一度解析してください。</div>';
   }
 });
 </script>
