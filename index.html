@@ -638,7 +638,8 @@ header,
 
 
 </section>
-<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js">
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+<script>
 function refreshAnalyzeButton(){
   const fileInput =
     document.querySelector('input[type="file"][multiple]') ||
@@ -736,7 +737,7 @@ refreshAnalyzeButton();
    items.push({file:f,url,img,name:ex?ex.name:base,minecraft_id:ex?ex.id:'',status:'未解析',statusClass:'warn',points:getCal()||clonePts(DEFAULT),confidence:null,pngBlob:null,colors:null});
  }
  batchStatus.textContent=`${items.length}枚を読み込みました`;
- render();setButtons();
+ render();setButtons();showUpload();
 };
 
 function attachSuggest(input,idInput,box,it){
@@ -757,7 +758,6 @@ function attachSuggest(input,idInput,box,it){
  input.onblur=()=>setTimeout(()=>box.style.display='none',180);
 }
 function render(){
- if(items.some(it=>it.status||it.pngBlob)) showResults();
  results.innerHTML='';
  items.forEach((it,i)=>{
    const d=document.createElement('div');d.className=`item ${it.statusClass}`;
@@ -930,9 +930,19 @@ async function analyzeItem(i,forceAuto=false){
  try{let r=await make16(it);it.pngBlob=r.blob;it.colors=extractColors(r.canvas);if(it.confidence>=.72){it.status='成功';it.statusClass='ok'}else{it.status='要確認';it.statusClass='warn'}}catch{it.status='失敗';it.statusClass='fail'}
 }
 $('analyzeAll').onclick=async()=>{
+ if(!items.length)return;
  $('analyzeAll').disabled=true;
- for(let i=0;i<items.length;i++){batchStatus.textContent=`${i+1} / ${items.length} 高精度解析中`;await analyzeItem(i,true)}
- batchStatus.textContent=`${items.length}枚の処理完了`;render();$('analyzeAll').disabled=false;
+ try{
+   for(let i=0;i<items.length;i++){
+     batchStatus.textContent=`${i+1} / ${items.length} 高精度解析中`;
+     await analyzeItem(i,true);
+   }
+   batchStatus.textContent=`${items.length}枚の処理完了`;
+   render();
+   showResults();
+ }finally{
+   $('analyzeAll').disabled=false;
+ }
 };
 
 function records(){return items.map(it=>({schema_version:'0.9',name:it.name||null,minecraft_id:it.minecraft_id||null,source_filename:it.file.name,image_source:'standardized_game_screenshot',analysis_size:'16x16',crop_points_normalized:it.points,auto_confidence:it.confidence,primary_color:it.colors?.[0]||null,secondary_color:it.colors?.[1]||null,status:it.status}))}
