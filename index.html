@@ -3,68 +3,400 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Minecraft Block Analyzer v0.9</title>
+<title>Minecraft Block Analyzer v1.4</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#202020">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Block Analyzer">
 <link rel="apple-touch-icon" href="icon-192.png">
+
+
+
+
+
 <style>
-:root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:#1b1b1b;background:#f3f3f3}
-*{box-sizing:border-box}body{margin:0}.wrap{max-width:1180px;margin:auto;padding:12px}
-.card{background:#fff;border:1px solid #ddd;border-radius:12px;padding:14px;margin-bottom:12px}
-h1{font-size:21px;margin:0 0 5px}h2{font-size:16px;margin:0 0 9px}.small{font-size:12px;color:#666;line-height:1.5}
+@font-face{
+  font-family:"BestTen CRT";
+  src:url("./BestTen-CRT.otf") format("opentype");
+  font-display:swap;
+}
+:root{
+  font-family:"BestTen CRT","Courier New",monospace;
+  --orange:#F8B400;
+  --blue:#0072C3;
+  --yellow:#FFE20A;
+  --black:#000000;
+  --white:#FFFFFF;
+  --ink:#111111;
+  --muted:#5d6670;
+  --paper:#FFFFFF;
+  --soft:#F5F7FA;
+  --line:#D9E1E8;
+  --green:#65C85A;
+  --red:#E76060;
+}
+*{
+  box-sizing:border-box;
+  font-family:"BestTen CRT","Courier New",monospace !important;
+}
+body{
+  margin:0;
+  min-height:100vh;
+  color:var(--ink);
+  background:
+    linear-gradient(180deg,#E9F4FA 0%,#F3F6F9 36%,#EDF1F4 100%);
+}
+.wrap{max-width:1200px;margin:auto;padding:14px 12px 44px}
+.card{
+  background:var(--paper);
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:17px;
+  margin-bottom:13px;
+  box-shadow:0 7px 18px rgba(24,50,75,.07);
+}
+.card:first-child{
+  min-height:205px;
+  position:relative;
+  overflow:hidden;
+  border:0;
+  border-radius:20px;
+  padding:24px 22px 21px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  color:var(--white);
+  background:
+    linear-gradient(116deg,var(--orange) 0 35%,var(--blue) 35% 100%);
+  box-shadow:0 13px 28px rgba(0,82,140,.20);
+}
+.card:first-child:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle,var(--yellow) 0 3px,transparent 3.4px) 7px 12px/20px 20px,
+    linear-gradient(135deg,transparent 0 67%,rgba(255,255,255,.15) 67% 72%,transparent 72% 100%);
+  mask-image:linear-gradient(90deg,#000 0 31%,transparent 31% 63%,#000 63%);
+  -webkit-mask-image:linear-gradient(90deg,#000 0 31%,transparent 31% 63%,#000 63%);
+  opacity:.70;
+}
+.card:first-child:after{
+  content:"";
+  position:absolute;
+  right:25px;
+  top:22px;
+  width:118px;
+  height:118px;
+  border:12px solid rgba(255,255,255,.13);
+  transform:rotate(15deg);
+  box-shadow:
+    -34px 38px 0 -24px rgba(255,226,10,.88),
+    -62px 2px 0 -37px rgba(0,0,0,.18);
+}
+h1{
+  margin:0 0 8px;
+  position:relative;
+  z-index:2;
+  max-width:920px;
+  font-size:38px;
+  line-height:1.02;
+  font-weight:400;
+  letter-spacing:0;
+  color:var(--yellow);
+  -webkit-text-stroke:2px var(--black);
+  paint-order:stroke fill;
+  text-shadow:4px 5px 0 rgba(0,0,0,.55);
+}
+h2{
+  font-size:18px;
+  margin:0 0 12px;
+  font-weight:400;
+  letter-spacing:0;
+}
+.small{
+  font-size:11px;
+  line-height:1.55;
+  color:var(--muted);
+}
+.card:first-child .small{
+  position:relative;
+  z-index:2;
+  color:var(--white);
+  font-size:12px;
+  text-shadow:0 1px 2px rgba(0,0,0,.2);
+}
 .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-button,input,textarea{font:inherit}button{padding:9px 11px;border:1px solid #bbb;background:#fff;border-radius:8px}
-button.primary{background:#222;color:#fff}button:disabled{opacity:.45}
-input[type=text],textarea{padding:8px;border:1px solid #bbb;border-radius:7px}
-textarea{width:100%;min-height:110px;resize:vertical}
-.status{padding:7px 9px;background:#f2f2f2;border-radius:7px;font-size:12px}
-.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px}
-.item{border:1px solid #ddd;border-radius:10px;padding:9px;background:#fafafa;position:relative}
-.item.ok{border-color:#9ec69e}.item.warn{border-color:#d9bb66}.item.fail{border-color:#d88}
-.thumb{width:96px;height:96px;image-rendering:pixelated;border:1px solid #aaa;border-radius:6px;background:#222}
-.nameInput,.idInput{width:100%;margin-top:6px}.badge{display:inline-block;padding:3px 7px;border-radius:999px;font-size:11px;background:#eee}
-.badge.ok{background:#e5f4e5}.badge.warn{background:#fff1c7}.badge.fail{background:#f9dddd}
-.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,.8fr);gap:12px}
-@media(max-width:800px){.grid2{grid-template-columns:1fr}}
-canvas{max-width:100%;border:1px solid #aaa;border-radius:8px;background:#222;touch-action:none}
-#editPreview{width:160px;height:160px;image-rendering:pixelated}
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:100;display:none;align-items:center;justify-content:center;padding:12px}
-.modalBox{background:#fff;max-width:920px;width:100%;max-height:94vh;overflow:auto;border-radius:12px;padding:12px}
-#loupeWrap{position:fixed;right:12px;top:12px;z-index:150;display:none;background:#fff;border:2px solid #222;border-radius:14px;padding:6px;box-shadow:0 6px 24px rgba(0,0,0,.28);pointer-events:none}
-#loupe{width:180px;height:180px;border-radius:10px;border:1px solid #888;background:#111;image-rendering:pixelated}
-.cal{background:#eef5ff;border:1px solid #b8cde8;padding:9px;border-radius:9px;margin-top:8px}
-.suggest{position:absolute;left:9px;right:9px;z-index:20;background:white;border:1px solid #bbb;border-radius:8px;box-shadow:0 6px 16px rgba(0,0,0,.15);max-height:220px;overflow:auto;display:none}
-.suggest button{width:100%;border:0;border-bottom:1px solid #eee;border-radius:0;text-align:left;padding:9px;background:white}
-.suggest button:last-child{border-bottom:0}
-.dictStat{font-size:12px;color:#555}
+button,input,textarea{font:inherit}
+button{
+  min-height:42px;
+  padding:9px 13px;
+  border:2px solid #20242A;
+  border-radius:9px;
+  background:#FFFFFF;
+  color:#151515;
+  font-weight:400;
+  box-shadow:0 4px 0 #20242A;
+}
+button:active{
+  transform:translateY(3px);
+  box-shadow:0 1px 0 #20242A;
+}
+button.primary{
+  background:var(--yellow);
+  color:#000;
+  border-color:#000;
+  box-shadow:0 4px 0 #000;
+}
+button.primary:active{box-shadow:0 1px 0 #000}
+button:disabled{opacity:.4;box-shadow:none}
+input[type=file]{
+  max-width:100%;
+  padding:7px;
+  border:2px dashed #AEBBC7;
+  border-radius:9px;
+  background:#F7FAFD;
+}
+input[type=text],textarea{
+  padding:10px 11px;
+  border:2px solid #BBC7D1;
+  border-radius:9px;
+  background:#FFFFFF;
+  color:#111;
+  outline:none;
+}
+input[type=text]:focus,textarea:focus{
+  border-color:var(--blue);
+  box-shadow:0 0 0 3px rgba(0,114,195,.13);
+}
+textarea{width:100%;min-height:100px;resize:vertical}
+.status,.dictStat{
+  display:inline-flex;
+  align-items:center;
+  padding:6px 9px;
+  border-radius:999px;
+  background:#E7F3FC;
+  color:#005B9A;
+  border:1px solid #BEDDF2;
+  font-size:10px;
+}
+.list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(286px,1fr));
+  gap:11px;
+}
+.item{
+  position:relative;
+  padding:11px;
+  border:1px solid #DCE4EC;
+  border-radius:13px;
+  background:#FFF;
+  box-shadow:0 5px 14px rgba(35,58,82,.055);
+  overflow:hidden;
+}
+.item:after{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;height:4px;
+  background:#B8C6D4;
+}
+.item.ok:after{background:var(--green)}
+.item.warn:after{background:var(--orange)}
+.item.fail:after{background:var(--red)}
+.thumb{
+  width:112px;
+  height:112px;
+  image-rendering:pixelated;
+  border:2px solid #30343A;
+  border-radius:8px;
+  background:
+    linear-gradient(45deg,#E8EBEE 25%,transparent 25%),
+    linear-gradient(-45deg,#E8EBEE 25%,transparent 25%),
+    linear-gradient(45deg,transparent 75%,#E8EBEE 75%),
+    linear-gradient(-45deg,transparent 75%,#E8EBEE 75%),
+    #FFF;
+  background-size:16px 16px;
+  background-position:0 0,0 8px,8px -8px,-8px 0;
+  margin-bottom:7px;
+}
+.nameInput,.idInput{width:100%;margin-top:6px}
+.badge{
+  display:inline-flex;
+  margin-left:7px;
+  padding:4px 7px;
+  border-radius:999px;
+  font-size:10px;
+}
+.badge.ok{background:#E2F7E4;color:#277A2C}
+.badge.warn{background:#FFF0CB;color:#8B5C00}
+.badge.fail{background:#FFE2E2;color:#9D3333}
+.grid2{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(300px,.85fr);
+  gap:12px;
+}
+canvas{
+  max-width:100%;
+  border:2px solid #30343A;
+  border-radius:10px;
+  background:#20272A;
+  touch-action:none;
+}
+#editPreview{
+  width:180px;
+  height:180px;
+  image-rendering:pixelated;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(20,29,40,.72);
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:12px;
+}
+.modalBox{
+  background:#FFF;
+  max-width:960px;
+  width:100%;
+  max-height:94vh;
+  overflow:auto;
+  border-radius:17px;
+  padding:15px;
+  box-shadow:0 24px 70px rgba(0,0,0,.28);
+}
+#loupeWrap{
+  position:fixed;
+  right:12px;
+  top:12px;
+  z-index:150;
+  display:none;
+  background:#FFF;
+  border:2px solid #30343A;
+  border-radius:11px;
+  padding:6px;
+  pointer-events:none;
+}
+#loupe{
+  width:180px;
+  height:180px;
+  border-radius:8px;
+  border:0;
+  background:#111;
+  image-rendering:pixelated;
+}
+.helpCompact{
+  margin-top:7px;
+  border-top:1px solid #E4E9EF;
+}
+.helpCompact summary{
+  cursor:pointer;
+  list-style:none;
+  padding:6px 1px 3px;
+  font-size:9px;
+  color:#89919B;
+}
+.helpCompact summary::-webkit-details-marker{display:none}
+.helpCompact summary:after{content:" ＋"}
+.helpCompact[open] summary:after{content:" −"}
+.helpCompact .small{
+  padding:2px 0 3px;
+  font-size:9px;
+  color:#9198A1;
+}
+.suggest{
+  position:absolute;
+  left:11px;
+  right:11px;
+  z-index:20;
+  background:#FFF;
+  border:2px solid #20242A;
+  border-radius:10px;
+  box-shadow:4px 4px 0 rgba(32,36,42,.28);
+  max-height:240px;
+  overflow:auto;
+  display:none;
+}
+.suggest button{
+  width:100%;
+  border:0;
+  border-bottom:1px solid #EDF0F4;
+  border-radius:0;
+  text-align:left;
+  padding:9px 10px;
+  background:#FFF;
+  box-shadow:none;
+}
+.item>.small{
+  margin:2px 0 4px;
+  font-size:10px;
+}
+.item>button{margin-top:7px;margin-right:5px}
+.card:nth-of-type(2) h2:before,
+.card:nth-of-type(3) h2:before,
+.card:nth-of-type(4) h2:before,
+.card:nth-of-type(5) h2:before{
+  display:inline-grid;
+  place-items:center;
+  width:25px;
+  height:25px;
+  margin-right:8px;
+  border-radius:7px;
+  background:var(--orange);
+  color:#000;
+  border:2px solid #000;
+  box-shadow:2px 2px 0 #000;
+  font-size:10px;
+}
+.card:nth-of-type(2) h2:before{content:"01"}
+.card:nth-of-type(3) h2:before{content:"02";background:var(--blue);color:#FFF}
+.card:nth-of-type(4) h2:before{content:"03";background:#65C85A}
+.card:nth-of-type(5) h2:before{content:"04";background:var(--yellow)}
+@media(max-width:800px){
+  .wrap{padding:10px 9px 32px}
+  .card{padding:14px;border-radius:14px}
+  .card:first-child{min-height:170px;padding:18px 15px}
+  h1{
+    font-size:28px;
+    -webkit-text-stroke:1.5px #000;
+    text-shadow:3px 4px 0 rgba(0,0,0,.5);
+  }
+  .grid2{grid-template-columns:1fr}
+  .list{grid-template-columns:1fr}
+  .thumb{width:106px;height:106px}
+  button{min-height:44px}
+}
 </style>
+
+
+
+
+
 </head>
 <body>
 <div class="wrap">
 <div class="card">
-<h1>Minecraft Block Analyzer v0.9</h1>
-<div class="small">固定撮影スタジオ向け高精度版。4辺を多数点から直線回帰して交点を四隅にする方式へ変更。日本語名→正式ID辞書＋予測候補にも対応。</div>
+<h1>Minecraft Block Analyzer v1.4</h1>
+<div class="small">撮影したブロックを、切り出し・色解析・ID整理までまとめて処理。</div>
 </div>
 
 <div class="card">
-<h2>1. スクリーンショットをまとめて選択</h2>
+<h2>スクリーンショット</h2>
 <div class="row">
 <input id="files" type="file" accept="image/*" multiple>
-<button id="analyzeAll" class="primary" disabled>高精度で一括解析</button>
+<button id="analyzeAll" class="primary" disabled>一括解析</button>
 <button id="clearAll">全消去</button>
 <span id="batchStatus" class="status">画像を選択してください</span>
 </div>
-<div class="cal">
-<strong>固定スタジオ推奨手順</strong>
-<div class="small">最初の1枚を必要なら手動補正 → 「この範囲を全画像に適用」。その保存範囲を次回の高精度検出の探索中心にも使います。</div>
-</div>
+<details class="helpCompact"><summary>精度を優先する場合</summary><div class="small">最初の1枚を手動補正し、「この範囲を全画像に適用」。保存範囲は次回の検出基準にも使われます。</div></details>
 </div>
 
 <div class="card">
-<h2>2. 名前・ID</h2>
+<h2>名前とID</h2>
 <div class="grid2">
 <div>
 <div class="row"><button id="useFilenames">ファイル名を名前にする</button><button id="cleanNames">名前を整形</button></div>
@@ -88,13 +420,13 @@ canvas{max-width:100%;border:1px solid #aaa;border-radius:8px;background:#222;to
 </div>
 
 <div class="card">
-<h2>3. 解析結果</h2>
+<h2>解析結果</h2>
 <div id="results" class="list"></div>
 </div>
 
 <div class="card">
-<h2>4. 出力</h2>
-<div class="row"><button id="exportJson" disabled>JSON</button><button id="exportCsv" disabled>CSV</button><button id="exportZip" class="primary" disabled>16×16画像＋データをZIP</button></div>
+<h2>書き出し</h2>
+<div class="row"><button id="exportJson" disabled>JSON</button><button id="exportCsv" disabled>CSV</button><button id="exportZip" class="primary" disabled>まとめてZIP保存</button></div>
 </div>
 </div>
 
