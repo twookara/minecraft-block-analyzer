@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Minecraft Block Analyzer v1.4</title>
+<title>Minecraft Block Analyzer v1.4.1</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#202020">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -18,8 +18,10 @@
 <style>
 @font-face{
   font-family:"BestTen CRT";
-  src:url("./BestTen-CRT.otf") format("opentype");
-  font-display:swap;
+  src:
+    url("./BestTen-CRT.otf") format("opentype"),
+    url("./Best10-FONT/BestTen-CRT.otf") format("opentype");
+  font-display:block;
 }
 :root{
   font-family:"BestTen CRT","Courier New",monospace;
@@ -380,7 +382,7 @@ canvas{
 <body>
 <div class="wrap">
 <div class="card">
-<h1>Minecraft Block Analyzer v1.4</h1>
+<h1>Minecraft Block Analyzer v1.4.1</h1>
 <div class="small">撮影したブロックを、切り出し・色解析・ID整理までまとめて処理。</div>
 </div>
 
@@ -741,5 +743,20 @@ $('applyAll').onclick=async()=>{let p=editPts.map(q=>({x:q.x/EC.width,y:q.y/EC.h
 
 if('serviceWorker' in navigator){addEventListener('load',()=>navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(()=>{}))}
 </script>
+
+<script>
+window.addEventListener("load", async () => {
+  try {
+    await document.fonts.load('16px "BestTen CRT"');
+    const ok = document.fonts.check('16px "BestTen CRT"');
+    document.documentElement.dataset.bestTenFont = ok ? "loaded" : "missing";
+    if (!ok) console.warn("BestTen-CRT.otf が見つかりません。GitHub Pages上にフォントファイルを配置してください。");
+  } catch (e) {
+    document.documentElement.dataset.bestTenFont = "missing";
+    console.warn("BestTen font load error", e);
+  }
+});
+</script>
+
 </body>
 </html>

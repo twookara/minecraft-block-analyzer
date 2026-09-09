@@ -1,19 +1,28 @@
-Minecraft Block Analyzer v1.4 フォント設定
+BestTen FONT の配置方法
 
-このPWAは BestTen-CRT.otf をサイト全体で使用する設定です。
+このZIPにはフォント本体は含まれていません。
 
-GitHub Pagesへアップロードする際、
-ご自身でダウンロードした BestTen-CRT.otf を
-index.html と同じ階層へ置いてください。
+次のどちらかで GitHub Pages に配置してください。
 
-配置例:
+方法A（推奨）
 /
   index.html
   BestTen-CRT.otf
   manifest.webmanifest
   sw.js
-  icon-192.png
-  icon-512.png
-  block_name_dictionary.json
+  ...
 
-フォントファイル自体はこの配布ZIPには含めていません。
+方法B（元ZIPのフォルダ構成をそのまま使う）
+/
+  index.html
+  Best10-FONT/
+    BestTen-CRT.otf
+  manifest.webmanifest
+  sw.js
+  ...
+
+v1.4.1 は両方の配置を自動で探します。
+
+注意:
+Best10-FONT.zip を ZIP のまま GitHub に置いてもブラウザは中の OTF を読めません。
+必ず BestTen-CRT.otf をファイルとして配置してください。

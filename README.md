@@ -1,4 +1,4 @@
-# Minecraft Block Analyzer v1.4
+# Minecraft Block Analyzer v1.4.1
 
 ## 自動検出
 - 1点の強いエッジを四隅として拾う方式を廃止。
@@ -77,3 +77,10 @@
 - GitHubへ公開する際、ユーザー所有の BestTen-CRT.otf を index.html と同じ階層へ配置すると全体へ適用
 - 機能は v1.3 から維持
 - PWAキャッシュ mcba-v14
+
+
+## v1.4.1 Font loading fix
+- BestTen-CRT.otf をルート配置／Best10-FONTフォルダ配置の両方から探索
+- font-display を block に変更
+- 読み込み確認を追加
+- PWAキャッシュを mcba-v141 に更新
