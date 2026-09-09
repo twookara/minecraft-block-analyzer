@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Minecraft Block Analyzer v1.4.1</title>
+<title>Minecraft Block Analyzer</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#202020">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -59,12 +59,12 @@ body{
   box-shadow:0 7px 18px rgba(24,50,75,.07);
 }
 .card:first-child{
-  min-height:205px;
+  min-height:0; aspect-ratio:16/9;
   position:relative;
   overflow:hidden;
   border:0;
   border-radius:20px;
-  padding:24px 22px 21px;
+  padding:0;
   display:flex;
   flex-direction:column;
   justify-content:flex-end;
@@ -73,45 +73,9 @@ body{
     linear-gradient(116deg,var(--orange) 0 35%,var(--blue) 35% 100%);
   box-shadow:0 13px 28px rgba(0,82,140,.20);
 }
-.card:first-child:before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle,var(--yellow) 0 3px,transparent 3.4px) 7px 12px/20px 20px,
-    linear-gradient(135deg,transparent 0 67%,rgba(255,255,255,.15) 67% 72%,transparent 72% 100%);
-  mask-image:linear-gradient(90deg,#000 0 31%,transparent 31% 63%,#000 63%);
-  -webkit-mask-image:linear-gradient(90deg,#000 0 31%,transparent 31% 63%,#000 63%);
-  opacity:.70;
-}
-.card:first-child:after{
-  content:"";
-  position:absolute;
-  right:25px;
-  top:22px;
-  width:118px;
-  height:118px;
-  border:12px solid rgba(255,255,255,.13);
-  transform:rotate(15deg);
-  box-shadow:
-    -34px 38px 0 -24px rgba(255,226,10,.88),
-    -62px 2px 0 -37px rgba(0,0,0,.18);
-}
-h1{
-  margin:0 0 8px;
-  position:relative;
-  z-index:2;
-  max-width:920px;
-  font-size:38px;
-  line-height:1.02;
-  font-weight:400;
-  letter-spacing:0;
-  color:var(--yellow);
-  -webkit-text-stroke:2px var(--black);
-  paint-order:stroke fill;
-  text-shadow:4px 5px 0 rgba(0,0,0,.55);
-}
+.card:first-child:before{display:none}
+.card:first-child:after{display:none}
+
 h2{
   font-size:18px;
   margin:0 0 12px;
@@ -361,17 +325,31 @@ canvas{
 @media(max-width:800px){
   .wrap{padding:10px 9px 32px}
   .card{padding:14px;border-radius:14px}
-  .card:first-child{min-height:170px;padding:18px 15px}
-  h1{
-    font-size:28px;
-    -webkit-text-stroke:1.5px #000;
-    text-shadow:3px 4px 0 rgba(0,0,0,.5);
-  }
+  .card:first-child{min-height:0; aspect-ratio:16/9;padding:0}
+  
   .grid2{grid-template-columns:1fr}
   .list{grid-template-columns:1fr}
   .thumb{width:106px;height:106px}
   button{min-height:44px}
 }
+
+.headerImageWrap{
+  position:absolute;
+  inset:0;
+  z-index:1;
+  overflow:hidden;
+}
+.headerImage{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
+}
+.card:first-child .small{
+  display:none !important;
+}
+
 </style>
 
 
@@ -382,7 +360,7 @@ canvas{
 <body>
 <div class="wrap">
 <div class="card">
-<h1>Minecraft Block Analyzer v1.4.1</h1>
+<div class="headerImageWrap"><img class="headerImage" src="./header-logo.png" alt="Minecraft Block Analyzer"></div>
 <div class="small">撮影したブロックを、切り出し・色解析・ID整理までまとめて処理。</div>
 </div>
 

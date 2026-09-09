@@ -1,5 +1,5 @@
 {
-  "name": "Minecraft Block Analyzer v1.4.1",
+  "name": "Minecraft Block Analyzer",
   "short_name": "Block Analyzer",
   "start_url": "./index.html",
   "scope": "./",
